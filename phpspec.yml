@@ -1,0 +1,6 @@
+bootstrap: app/autoload.php
+
+formatter.name: pretty
+
+extensions:
+  Nagno\Phpspec\BootstrapMagento2\Bootstrap: ~

@@ -1,0 +1,7 @@
+includes:
+    - vendor/inviqa/phpstan-magento2/extension.neon
+    - .my127ws/application/static/phpstan.neon
+parameters:
+    level: 7
+    paths:
+       - src

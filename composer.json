@@ -1,0 +1,84 @@
+{
+    "name": "inviqa/magento2-bdd-example",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "magento/product-community-edition": "2.3.3",
+        "composer/composer": "@alpha"
+    },
+    "require-dev": {
+        "behat/behat": "^3.5",
+        "bex/behat-magento2-extension": "^2.0",
+        "inviqa/phpstan-magento2": "^0.1.2",
+        "nagno/phpspec-bootstrap-magento2": "^3.1",
+        "phpmd/phpmd": "^2.7",
+        "phpspec/phpspec": "^6.0",
+        "phpstan/phpstan": "^0.11.19",
+        "phpunit/phpunit": "^8.4",
+        "slevomat/coding-standard": "^5.0",
+        "squizlabs/php_codesniffer": "^3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Magento\\Framework\\": "lib/internal/Magento/Framework/",
+            "Magento\\Setup\\": "setup/src/Magento/Setup/",
+            "Magento\\": "app/code/Magento/",
+            "Zend\\Mvc\\Controller\\": "setup/src/Zend/Mvc/Controller/",
+            "Inviqa\\": "src/Inviqa"
+        },
+        "files": [
+            "app/etc/NonComposerComponentRegistration.php",
+            "app/etc/InviqaNonComposerComponentRegistration.php"
+        ],
+        "exclude-from-classmap": [
+            "**/dev/**",
+            "**/update/**",
+            "**/Test/**"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Magento\\Sniffs\\": "dev/tests/static/framework/Magento/Sniffs/",
+            "Magento\\Tools\\": "dev/tools/Magento/Tools/",
+            "Magento\\Tools\\Sanity\\": "dev/build/publication/sanity/Magento/Tools/Sanity/",
+            "Magento\\TestFramework\\Inspection\\": "dev/tests/static/framework/Magento/TestFramework/Inspection/",
+            "Magento\\TestFramework\\Utility\\": "dev/tests/static/framework/Magento/TestFramework/Utility/",
+            "Inviqa\\Acceptance\\": "features/bootstrap"
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:tkotosz/phpspec-bootstrap-magento2.git"
+        }
+    ],
+    "extra": {
+        "magento-force": "override"
+    },
+    "scripts": {
+        "test": [
+            "@test-quality",
+            "@test-unit",
+            "@test-acceptance"
+        ],
+        "test-quality": [
+            "phpcs -v",
+            "phpstan analyse",
+            "phpmd ./src text ./phpmd.xml"
+        ],
+        "test-unit": [
+            "phpspec run"
+        ],
+        "test-acceptance": [
+            "behat"
+        ]
+    },
+    "config": {
+        "bin-dir": "bin",
+        "sort-packages": true
+    }
+}

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Inviqa">
+    <description>Inviqa Magento2 PSR2 codesniffer configuration</description>
+
+    <rule ref="PSR2"/>
+
+    <file>./src</file>
+
+    <exclude-pattern>*/migrations/*</exclude-pattern>
+    <exclude-pattern>*/Setup/*</exclude-pattern>
+    <exclude-pattern>*/Standards/*/Tests/*\.(inc|css|js)</exclude-pattern>
+
+    <config name="installed_paths" value="vendor/slevomat/coding-standard" />
+
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="180" />
+            <property name="absoluteLineLimit" value="250" />
+        </properties>
+    </rule>
+
+    <rule ref="PSR2.Methods.MethodDeclaration.Underscore">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="PSR2.Classes.PropertyDeclaration.Underscore">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+        <properties>
+            <property name="ignoreBlankLines" value="false"/>
+        </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Commenting" />
+
+    <rule ref="SlevomatCodingStandard.Commenting.DisallowOneLinePropertyDocComment">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Commenting.RequireOneLinePropertyDocComment" />
+
+    <rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
+        <properties>
+            <property name="linesCountBetweenDescriptionAndAnnotations" value="1" />
+            <property name="linesCountBetweenDifferentAnnotationsTypes" value="1" />
+        </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenAnnotations">
+        <properties>
+            <property name="forbiddenAnnotations" type="array">
+                <element value="@author" />
+                <element value="@package" />
+                <element value="@api" />
+            </property>
+        </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility" />
+
+    <arg name="extensions" value="php" />
+    <arg name="report" value="full" />
+    <arg value="s" />
+</ruleset>
