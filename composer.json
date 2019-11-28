@@ -10,13 +10,18 @@
         "behat/behat": "^3.5",
         "bex/behat-magento2-extension": "^2.0",
         "inviqa/phpstan-magento2": "^0.1.2",
+        "localheinz/phpstan-rules": "^0.13.0",
         "nagno/phpspec-bootstrap-magento2": "^3.1",
         "phpmd/phpmd": "^2.7",
         "phpspec/phpspec": "^6.0",
+        "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.11.19",
+        "phpstan/phpstan-deprecation-rules": "^0.11.2",
+        "phpstan/phpstan-strict-rules": "^0.11.1",
         "phpunit/phpunit": "^8.4",
         "slevomat/coding-standard": "^5.0",
-        "squizlabs/php_codesniffer": "^3.5"
+        "squizlabs/php_codesniffer": "^3.5",
+        "vimeo/psalm": "^3.7"
     },
     "autoload": {
         "psr-4": {
@@ -68,6 +73,7 @@
         "test-quality": [
             "phpcs -v",
             "phpstan analyse",
+            "psalm",
             "phpmd ./src text ./phpmd.xml"
         ],
         "test-unit": [
