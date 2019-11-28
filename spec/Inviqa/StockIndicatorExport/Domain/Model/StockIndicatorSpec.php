@@ -64,31 +64,25 @@ class StockIndicatorSpec extends ObjectBehavior
         $this->shouldHaveType(StockIndicator::class);
     }
 
-    function it_is_created_as_a_red_stock_indicator_when_created_for_an_out_of_stock_product()
+    function it_can_be_created_from_zero_stock()
     {
-        $product = Product::fromSkuAndStock(Sku::fromString('foo'), Stock::fromInt(0));
-
-        $this->beConstructedThrough('fromProduct', [$product]);
+        $this->beConstructedThrough('fromProductStock', [Stock::fromInt(0)]);
 
         $this->shouldHaveType(StockIndicator::class);
         $this->shouldBeLike(StockIndicator::red());
     }
 
-    function it_is_created_as_a_yellow_stock_indicator_when_created_for_a_product_with_low_stock()
+    function it_can_be_created_from_low_stock()
     {
-        $product = Product::fromSkuAndStock(Sku::fromString('foo'), Stock::fromInt(5));
-
-        $this->beConstructedThrough('fromProduct', [$product]);
+        $this->beConstructedThrough('fromProductStock', [Stock::fromInt(5)]);
 
         $this->shouldHaveType(StockIndicator::class);
         $this->shouldBeLike(StockIndicator::yellow());
     }
 
-    function it_is_created_as_a_green_stock_indicator_when_created_for_a_product_with_high_stock()
+    function it_can_be_created_from_high_stock()
     {
-        $product = Product::fromSkuAndStock(Sku::fromString('foo'), Stock::fromInt(20));
-
-        $this->beConstructedThrough('fromProduct', [$product]);
+        $this->beConstructedThrough('fromProductStock', [Stock::fromInt(20)]);
 
         $this->shouldHaveType(StockIndicator::class);
         $this->shouldBeLike(StockIndicator::green());

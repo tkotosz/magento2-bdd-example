@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Inviqa\StockIndicatorExport\Domain\Model;
 
 use InvalidArgumentException;
+use Inviqa\StockIndicatorExport\Domain\Model\Product\Stock;
 
 final class StockIndicator
 {
@@ -43,13 +44,13 @@ final class StockIndicator
         return new self(self::TYPE_GREEN);
     }
 
-    public static function fromProduct(Product $product): StockIndicator
+    public static function fromProductStock(Stock $stock): StockIndicator
     {
-        if ($product->stock()->toInt() === 0) {
+        if ($stock->toInt() === 0) {
             return self::red();
         }
 
-        if ($product->stock()->toInt() <= self::LOW_STOCK_THRESHOLD) {
+        if ($stock->toInt() <= self::LOW_STOCK_THRESHOLD) {
             return self::yellow();
         }
 
