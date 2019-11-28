@@ -1,10 +1,10 @@
 Feature: Stock Indicator Export
   As a member of the marketing team
-  In order to be able to review the stock state of the whole product catalogue
+  In order to be able to review the stock state of the whole product catalog
   I should be able to export a stock indicator for all products
 
   Definitions:
-  - Product: A thing which has sku and stock.
+  - Product: An entity which has sku and stock properties.
   - Product Sku: Unique identifier of a product. It is a non-empty string value which cannot contain spaces.
   - Product Stock: An integer value representing how many available of a product. It can be zero or a positive number.
   - Catalog: Represents the collection of all products available in the system.
