@@ -7,6 +7,8 @@ use Inviqa\StockIndicatorExport\Domain\Model\Product;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Sku;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Stock;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicator;
+use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument;
+use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument\DocumentEntry;
 use PHPUnit\Framework\Assert;
 
 class StockIndicatorExportContext implements Context
@@ -17,28 +19,20 @@ class StockIndicatorExportContext implements Context
     /** @var Product|null */
     private $product = null;
 
-    /** @var StockIndicator */
-    private $exportedStockIndicator;
+    /** @var StockIndicatorExportDocument */
+    private $stockIndicatorExportDocument;
 
-    /** @var StockIndicator[] */
-    private $exportedStockIndicators = [];
-
-    /**
-     * @Given /^there is a product in the catalog that has a stock level of (\d+)$/
-     */
-    public function thereIsAProductInTheCatalogThatHasAStockLevelOf(int $stock)
-    {
-        $product = Product::fromSkuAndStock(Sku::fromString('inviqa-t-shirt-size-l'), Stock::fromInt($stock));
-        $this->catalog[] = $product;
-        $this->product = $product;
-    }
+    /** @var int */
+    private $expectedNumberOfEntries = 0;
 
     /**
      * @Given /^there is a product with sku ([^ ]*) in the catalog that has a stock level of (\d+)$/
      */
     public function thereIsAProductWithSkuInTheCatalogThatHasAStockLevelOf(string $sku, int $stock)
     {
-        $this->catalog[] = Product::fromSkuAndStock(Sku::fromString($sku), Stock::fromInt($stock));
+        $product = Product::fromSkuAndStock(Sku::fromString($sku), Stock::fromInt($stock));
+        $this->catalog[] = $product;
+        $this->product = $product;
     }
 
     /**
@@ -50,11 +44,13 @@ class StockIndicatorExportContext implements Context
     }
 
     /**
-     * @When I export the stock indicator for this product
+     * @When I export the stock indicator for that product
      */
     public function iExportTheStockIndicatorForThisProduct()
     {
-        $this->exportedStockIndicator = StockIndicator::fromProductStock($this->product->stock());
+        $stockIndicator = StockIndicator::fromProductStock($this->product->stock());
+        $exportEntry = DocumentEntry::fromSkuAndStockIndicator($this->product->sku(), $stockIndicator);
+        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries([$exportEntry]);
     }
 
     /**
@@ -62,61 +58,82 @@ class StockIndicatorExportContext implements Context
      */
     public function iExportTheStockIndicatorForAllProducts()
     {
-        $this->exportedStockIndicators = [];
-
         foreach ($this->catalog as $product) {
-            $this->exportedStockIndicators[$product->sku()->toString()] = StockIndicator::fromProductStock($product->stock());
+            $stockIndicator = StockIndicator::fromProductStock($product->stock());
+            $exportEntries[] = DocumentEntry::fromSkuAndStockIndicator($product->sku(), $stockIndicator);
         }
+
+        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries($exportEntries);
     }
 
     /**
-     * @Then this product should get a red stock indicator
+     * @Then I should get a stock indicator export document
      */
-    public function thisProductShouldGetARedStockIndicator()
+    public function iShouldGetAStockIndicatorExportDocument()
     {
-        Assert::assertEquals($this->exportedStockIndicator, StockIndicator::red());
+        Assert::assertInstanceOf(StockIndicatorExportDocument::class, $this->stockIndicatorExportDocument);
     }
 
     /**
-     * @Then this product should get a yellow stock indicator
+     * @Then /^the document should contain an entry for ([^ ]*) with a red stock indicator$/
      */
-    public function thisProductShouldGetAYellowStockIndicator()
+    public function theDocumentShouldContainAnEntryForProductWithARedStockIndicator(string $sku)
     {
-        Assert::assertEquals($this->exportedStockIndicator, StockIndicator::yellow());
+        $productDocumentEntry = null;
+
+        foreach ($this->stockIndicatorExportDocument as $documentEntry) {
+            if ($documentEntry->sku()->toString() === $sku) {
+                $productDocumentEntry = $documentEntry;
+            }
+        }
+
+        Assert::assertNotNull($productDocumentEntry);
+        Assert::assertEquals(StockIndicator::red(), $productDocumentEntry->stockIndicator());
+        $this->expectedNumberOfEntries++;
     }
 
     /**
-     * @Then this product should get a green stock indicator
+     * @Then /^the document should contain an entry for ([^ ]*) with a yellow stock indicator$/
      */
-    public function thisProductShouldGetAGreenStockIndicator()
+    public function theDocumentShouldContainAnEntryForINVIQAWithAYellowStockIndicator(string $sku)
     {
-        Assert::assertEquals($this->exportedStockIndicator, StockIndicator::green());
+        $productDocumentEntry = null;
+
+        foreach ($this->stockIndicatorExportDocument as $documentEntry) {
+            if ($documentEntry->sku()->toString() === $sku) {
+                $productDocumentEntry = $documentEntry;
+            }
+        }
+
+        Assert::assertNotNull($productDocumentEntry);
+        Assert::assertEquals(StockIndicator::yellow(), $productDocumentEntry->stockIndicator());
+        $this->expectedNumberOfEntries++;
     }
 
     /**
-     * @Then /^the ([^ ]*) product should get a red stock indicator$/
+     * @Then /^the document should contain an entry for ([^ ]*) with a green stock indicator$/
      */
-    public function theProductShouldGetARedStockIndicator(string $sku)
+    public function theDocumentShouldContainAnEntryForINVIQAWithAGreenStockIndicator(string $sku)
     {
-        Assert::assertArrayHasKey($sku, $this->exportedStockIndicators);
-        Assert::assertEquals($this->exportedStockIndicators[$sku], StockIndicator::red());
+        $productDocumentEntry = null;
+
+        foreach ($this->stockIndicatorExportDocument as $documentEntry) {
+            if ($documentEntry->sku()->toString() === $sku) {
+                $productDocumentEntry = $documentEntry;
+            }
+        }
+
+        Assert::assertNotNull($productDocumentEntry);
+        Assert::assertEquals(StockIndicator::green(), $productDocumentEntry->stockIndicator());
+        $this->expectedNumberOfEntries++;
     }
 
     /**
-     * @Then /^the ([^ ]*) product should get a yellow stock indicator$/
+     * @Given /^the document should not have any further entries$/
      */
-    public function theProductShouldGetAYellowStockIndicator(string $sku)
+    public function theDocumentShouldNotHaveAnyFurtherEntries()
     {
-        Assert::assertArrayHasKey($sku, $this->exportedStockIndicators);
-        Assert::assertEquals($this->exportedStockIndicators[$sku], StockIndicator::yellow());
-    }
-
-    /**
-     * @Then /^the ([^ ]*) product should get a green stock indicator$/
-     */
-    public function theProductShouldGetAGreenStockIndicator(string $sku)
-    {
-        Assert::assertArrayHasKey($sku, $this->exportedStockIndicators);
-        Assert::assertEquals($this->exportedStockIndicators[$sku], StockIndicator::green());
+        Assert::assertNotNull($this->stockIndicatorExportDocument);
+        Assert::assertCount($this->expectedNumberOfEntries, $this->stockIndicatorExportDocument);
     }
 }

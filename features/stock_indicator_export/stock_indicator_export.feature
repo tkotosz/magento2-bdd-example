@@ -9,6 +9,8 @@ Feature: Stock Indicator Export
   - Product Stock: An integer value representing how many available of a product. It can be zero or a positive number.
   - Catalog: Represents the collection of all products available in the system.
   - Stock Indicator: A label which describes the state of the product stock. Can be RED, YELLOW or GREEN depending on the available stock. See Rules below.
+  - Stock Indicator Export Document: A document containing Stock Indicator Export Document Entries.
+  - Stock Indicator Export Document Entry: A Product Sku - Stock Indicator pair describing the stock status of a product.
 
   Rules:
   - When the product stock is 0 then it should be exported with a Red indicator
@@ -19,14 +21,18 @@ Feature: Stock Indicator Export
   - The stock indicator export can be run for all products
 
   Scenario: Out of stock product gets the red stock indicator
-    Given there is a product in the catalog that has a stock level of 0
-    When I export the stock indicator for this product
-    Then this product should get a red stock indicator
+    Given there is a product with sku INVIQA-001 in the catalog that has a stock level of 0
+    When I export the stock indicator for that product
+    Then I should get a stock indicator export document
+    And the document should contain an entry for INVIQA-001 with a red stock indicator
+    And the document should not have any further entries
 
   Scenario Outline: Product with low stock level gets the yellow stock indicator
-    Given there is a product in the catalog that has a stock level of <StockLevel>
-    When I export the stock indicator for this product
-    Then this product should get a yellow stock indicator
+    Given there is a product with sku INVIQA-001 in the catalog that has a stock level of <StockLevel>
+    When I export the stock indicator for that product
+    Then I should get a stock indicator export document
+    And the document should contain an entry for INVIQA-001 with a yellow stock indicator
+    And the document should not have any further entries
     Examples:
       | StockLevel |
       | 1          |
@@ -35,9 +41,11 @@ Feature: Stock Indicator Export
       | 10         |
 
   Scenario Outline: Product with high stock level gets the green stock indicator
-    Given there is a product in the catalog that has a stock level of <StockLevel>
-    When I export the stock indicator for this product
-    Then this product should get a green stock indicator
+    Given there is a product with sku INVIQA-001 in the catalog that has a stock level of <StockLevel>
+    When I export the stock indicator for that product
+    Then I should get a stock indicator export document
+    And the document should contain an entry for INVIQA-001 with a green stock indicator
+    And the document should not have any further entries
     Examples:
       | StockLevel |
       | 11         |
@@ -49,6 +57,8 @@ Feature: Stock Indicator Export
     Given there is a product with sku INVIQA-003 in the catalog that has a stock level of 20
     And there are no other products in the catalog
     When I export the stock indicator for the whole catalog
-    Then the INVIQA-001 product should get a red stock indicator
-    And the INVIQA-002 product should get a yellow stock indicator
-    And the INVIQA-003 product should get a green stock indicator
+    Then I should get a stock indicator export document
+    And the document should contain an entry for INVIQA-001 with a red stock indicator
+    And the document should contain an entry for INVIQA-002 with a yellow stock indicator
+    And the document should contain an entry for INVIQA-003 with a green stock indicator
+    And the document should not have any further entries
