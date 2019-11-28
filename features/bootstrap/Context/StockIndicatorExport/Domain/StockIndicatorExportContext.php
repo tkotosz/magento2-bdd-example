@@ -74,7 +74,7 @@ class StockIndicatorExportContext implements Context
      */
     public function thisProductShouldGetARedStockIndicator()
     {
-        Assert::assertTrue($this->exportedStockIndicator->sameAs(StockIndicator::red()));
+        Assert::assertEquals($this->exportedStockIndicator, StockIndicator::red());
     }
 
     /**
@@ -82,7 +82,7 @@ class StockIndicatorExportContext implements Context
      */
     public function thisProductShouldGetAYellowStockIndicator()
     {
-        Assert::assertTrue($this->exportedStockIndicator->sameAs(StockIndicator::yellow()));
+        Assert::assertEquals($this->exportedStockIndicator, StockIndicator::yellow());
     }
 
     /**
@@ -90,7 +90,7 @@ class StockIndicatorExportContext implements Context
      */
     public function thisProductShouldGetAGreenStockIndicator()
     {
-        Assert::assertTrue($this->exportedStockIndicator->sameAs(StockIndicator::green()));
+        Assert::assertEquals($this->exportedStockIndicator, StockIndicator::green());
     }
 
     /**
@@ -98,8 +98,8 @@ class StockIndicatorExportContext implements Context
      */
     public function theProductShouldGetARedStockIndicator(string $sku)
     {
-        Assert::assertTrue(isset($this->exportedStockIndicators[$sku]));
-        Assert::assertTrue($this->exportedStockIndicators[$sku]->sameAs(StockIndicator::red()));
+        Assert::assertArrayHasKey($sku, $this->exportedStockIndicators);
+        Assert::assertEquals($this->exportedStockIndicators[$sku], StockIndicator::red());
     }
 
     /**
@@ -107,8 +107,8 @@ class StockIndicatorExportContext implements Context
      */
     public function theProductShouldGetAYellowStockIndicator(string $sku)
     {
-        Assert::assertTrue(isset($this->exportedStockIndicators[$sku]));
-        Assert::assertTrue($this->exportedStockIndicators[$sku]->sameAs(StockIndicator::yellow()));
+        Assert::assertArrayHasKey($sku, $this->exportedStockIndicators);
+        Assert::assertEquals($this->exportedStockIndicators[$sku], StockIndicator::yellow());
     }
 
     /**
@@ -116,7 +116,7 @@ class StockIndicatorExportContext implements Context
      */
     public function theProductShouldGetAGreenStockIndicator(string $sku)
     {
-        Assert::assertTrue(isset($this->exportedStockIndicators[$sku]));
-        Assert::assertTrue($this->exportedStockIndicators[$sku]->sameAs(StockIndicator::green()));
+        Assert::assertArrayHasKey($sku, $this->exportedStockIndicators);
+        Assert::assertEquals($this->exportedStockIndicators[$sku], StockIndicator::green());
     }
 }

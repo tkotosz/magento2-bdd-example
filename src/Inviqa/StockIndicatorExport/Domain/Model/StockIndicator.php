@@ -56,11 +56,6 @@ final class StockIndicator
         return self::green();
     }
 
-    public function sameAs(StockIndicator $red): bool
-    {
-        return $this->value === $red->value;
-    }
-
     private function __construct(string $value)
     {
         $this->value = $value;

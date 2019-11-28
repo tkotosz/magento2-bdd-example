@@ -64,15 +64,6 @@ class StockIndicatorSpec extends ObjectBehavior
         $this->shouldHaveType(StockIndicator::class);
     }
 
-    function it_can_compare_itself_with_another_stock_indicator()
-    {
-        $this->beConstructedThrough('red');
-
-        $this->sameAs(StockIndicator::red())->shouldReturn(true);
-        $this->sameAs(StockIndicator::green())->shouldReturn(false);
-        $this->sameAs(StockIndicator::yellow())->shouldReturn(false);
-    }
-
     function it_is_created_as_a_red_stock_indicator_when_created_for_an_out_of_stock_product()
     {
         $product = Product::fromSkuAndStock(Sku::fromString('foo'), Stock::fromInt(0));
@@ -80,7 +71,7 @@ class StockIndicatorSpec extends ObjectBehavior
         $this->beConstructedThrough('fromProduct', [$product]);
 
         $this->shouldHaveType(StockIndicator::class);
-        $this->sameAs(StockIndicator::red())->shouldReturn(true);
+        $this->shouldBeLike(StockIndicator::red());
     }
 
     function it_is_created_as_a_yellow_stock_indicator_when_created_for_a_product_with_low_stock()
@@ -90,7 +81,7 @@ class StockIndicatorSpec extends ObjectBehavior
         $this->beConstructedThrough('fromProduct', [$product]);
 
         $this->shouldHaveType(StockIndicator::class);
-        $this->sameAs(StockIndicator::yellow())->shouldReturn(true);
+        $this->shouldBeLike(StockIndicator::yellow());
     }
 
     function it_is_created_as_a_green_stock_indicator_when_created_for_a_product_with_high_stock()
@@ -100,6 +91,6 @@ class StockIndicatorSpec extends ObjectBehavior
         $this->beConstructedThrough('fromProduct', [$product]);
 
         $this->shouldHaveType(StockIndicator::class);
-        $this->sameAs(StockIndicator::green())->shouldReturn(true);
+        $this->shouldBeLike(StockIndicator::green());
     }
 }
