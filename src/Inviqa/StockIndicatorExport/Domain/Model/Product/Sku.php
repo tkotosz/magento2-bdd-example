@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inviqa\StockIndicatorExport\Domain\Model\Product;
 
 use InvalidArgumentException;
@@ -11,7 +13,7 @@ final class Sku
 
     public static function fromString(string $value): Sku
     {
-        if (empty($value)) {
+        if ($value === "") {
             throw new InvalidArgumentException('Product sku cannot be empty');
         }
 

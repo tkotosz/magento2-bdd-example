@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inviqa\StockIndicatorExport\Domain\Model\Product;
 
 use InvalidArgumentException;

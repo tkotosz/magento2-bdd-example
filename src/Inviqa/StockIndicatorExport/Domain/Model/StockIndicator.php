@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inviqa\StockIndicatorExport\Domain\Model;
 
 use InvalidArgumentException;
@@ -13,7 +15,7 @@ final class StockIndicator
 
     public static function fromString(string $value): StockIndicator
     {
-        if (!in_array($value, ['RED', 'YELLOW', 'GREEN'])) {
+        if (!in_array($value, ['RED', 'YELLOW', 'GREEN'], true)) {
             throw new InvalidArgumentException(
                 'Stock indicator can only be RED, YELLOW or GREEN, but ' . $value . ' given'
             );
@@ -27,12 +29,12 @@ final class StockIndicator
         return new self('RED');
     }
 
-    public static function yellow()
+    public static function yellow(): StockIndicator
     {
         return new self('YELLOW');
     }
 
-    public static function green()
+    public static function green(): StockIndicator
     {
         return new self('GREEN');
     }
