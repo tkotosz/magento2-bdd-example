@@ -8,6 +8,10 @@ use InvalidArgumentException;
 
 final class StockIndicator
 {
+    private const TYPE_RED = 'RED';
+    private const TYPE_YELLOW = 'YELLOW';
+    private const TYPE_GREEN = 'GREEN';
+
     private const LOW_STOCK_THRESHOLD = 10;
 
     /** @var string */
@@ -15,9 +19,9 @@ final class StockIndicator
 
     public static function fromString(string $value): StockIndicator
     {
-        if (!in_array($value, ['RED', 'YELLOW', 'GREEN'], true)) {
+        if (!in_array($value, [self::TYPE_RED, self::TYPE_YELLOW, self::TYPE_GREEN], true)) {
             throw new InvalidArgumentException(
-                'Stock indicator can only be RED, YELLOW or GREEN, but ' . $value . ' given'
+                sprintf('Stock indicator can only be RED, YELLOW or GREEN, but "%s" given', $value)
             );
         }
 
@@ -26,20 +30,20 @@ final class StockIndicator
 
     public static function red(): StockIndicator
     {
-        return new self('RED');
+        return new self(self::TYPE_RED);
     }
 
     public static function yellow(): StockIndicator
     {
-        return new self('YELLOW');
+        return new self(self::TYPE_YELLOW);
     }
 
     public static function green(): StockIndicator
     {
-        return new self('GREEN');
+        return new self(self::TYPE_GREEN);
     }
 
-    public static function for(Product $product): StockIndicator
+    public static function fromProduct(Product $product): StockIndicator
     {
         if ($product->stock()->toInt() === 0) {
             return self::red();

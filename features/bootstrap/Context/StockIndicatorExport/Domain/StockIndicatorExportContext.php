@@ -54,7 +54,7 @@ class StockIndicatorExportContext implements Context
      */
     public function iExportTheStockIndicatorForThisProduct()
     {
-        $this->exportedStockIndicator = StockIndicator::for($this->product);
+        $this->exportedStockIndicator = StockIndicator::fromProduct($this->product);
     }
 
     /**
@@ -65,7 +65,7 @@ class StockIndicatorExportContext implements Context
         $this->exportedStockIndicators = [];
 
         foreach ($this->catalog as $product) {
-            $this->exportedStockIndicators[$product->sku()->toString()] = StockIndicator::for($product);
+            $this->exportedStockIndicators[$product->sku()->toString()] = StockIndicator::fromProduct($product);
         }
     }
 

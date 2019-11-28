@@ -77,7 +77,7 @@ class StockIndicatorSpec extends ObjectBehavior
     {
         $product = Product::fromSkuAndStock(Sku::fromString('foo'), Stock::fromInt(0));
 
-        $this->beConstructedThrough('for', [$product]);
+        $this->beConstructedThrough('fromProduct', [$product]);
 
         $this->shouldHaveType(StockIndicator::class);
         $this->sameAs(StockIndicator::red())->shouldReturn(true);
@@ -87,7 +87,7 @@ class StockIndicatorSpec extends ObjectBehavior
     {
         $product = Product::fromSkuAndStock(Sku::fromString('foo'), Stock::fromInt(5));
 
-        $this->beConstructedThrough('for', [$product]);
+        $this->beConstructedThrough('fromProduct', [$product]);
 
         $this->shouldHaveType(StockIndicator::class);
         $this->sameAs(StockIndicator::yellow())->shouldReturn(true);
@@ -97,7 +97,7 @@ class StockIndicatorSpec extends ObjectBehavior
     {
         $product = Product::fromSkuAndStock(Sku::fromString('foo'), Stock::fromInt(20));
 
-        $this->beConstructedThrough('for', [$product]);
+        $this->beConstructedThrough('fromProduct', [$product]);
 
         $this->shouldHaveType(StockIndicator::class);
         $this->sameAs(StockIndicator::green())->shouldReturn(true);
