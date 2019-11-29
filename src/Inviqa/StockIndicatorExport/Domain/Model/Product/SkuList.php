@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inviqa\StockIndicatorExport\Domain\Model\Product;
 
 use ArrayIterator;
 use IteratorAggregate;
 use Traversable;
 
-class SkuList implements IteratorAggregate
+final class SkuList implements IteratorAggregate
 {
     /** @var Sku[] */
     private $skus;
@@ -21,15 +23,21 @@ class SkuList implements IteratorAggregate
         return new self($skus);
     }
 
-    public function has(Sku $sku): bool
+    public function has(Sku $otherSku): bool
     {
-        return in_array($sku, $this->skus, false);
+        foreach ($this->skus as $sku) {
+            if ($sku->toString() === $otherSku->toString()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
      * @return Traversable|Sku[]
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->skus);
     }

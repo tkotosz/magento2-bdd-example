@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inviqa\StockIndicatorExport\Domain\Model;
 
 use ArrayIterator;
 use IteratorAggregate;
 use Traversable;
 
-class ProductList implements IteratorAggregate
+final class ProductList implements IteratorAggregate
 {
     /** @var Product[] */
     private $products;
@@ -24,7 +26,7 @@ class ProductList implements IteratorAggregate
     /**
      * @return Traversable|Product[]
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->products);
     }
