@@ -68,7 +68,7 @@ Feature: Stock Indicator Export
       | 9          |
       | 10         |
 
-  Scenario Outline: Exporting stock indicator for a product with high stock availability
+  Scenario Outline: Stock indicator for high stock products
     Given there is a product with sku INVIQA-001 in the catalog that has a stock level of <StockLevel>
     When I run the stock indicator export for that product
     Then a stock indicator export document should be generated
