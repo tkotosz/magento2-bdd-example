@@ -5,7 +5,9 @@ namespace Inviqa\Acceptance\Context\StockIndicatorExport\Domain;
 use Behat\Behat\Context\Context;
 use Inviqa\StockIndicatorExport\Domain\Model\Product;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Sku;
+use Inviqa\StockIndicatorExport\Domain\Model\Product\SkuList;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Stock;
+use Inviqa\StockIndicatorExport\Domain\Model\ProductList;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicator;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument\DocumentEntry;
@@ -44,9 +46,9 @@ class StockIndicatorExportContext implements Context
     }
 
     /**
-     * @When I export the stock indicator for that product
+     * @When I run the stock indicator export for that product
      */
-    public function iExportTheStockIndicatorForThisProduct()
+    public function iRunTheStockIndicatorExportForThatProduct()
     {
         $stockIndicator = StockIndicator::fromProductStock($this->product->stock());
         $exportEntry = DocumentEntry::fromSkuAndStockIndicator($this->product->sku(), $stockIndicator);
@@ -54,10 +56,12 @@ class StockIndicatorExportContext implements Context
     }
 
     /**
-     * @When I export the stock indicator for the whole catalog
+     * @When I run the stock indicator export for the catalog
      */
-    public function iExportTheStockIndicatorForAllProducts()
+    public function iRunTheStockIndicatorExportForTheCatalog()
     {
+        $exportEntries = [];
+
         foreach ($this->catalog as $product) {
             $stockIndicator = StockIndicator::fromProductStock($product->stock());
             $exportEntries[] = DocumentEntry::fromSkuAndStockIndicator($product->sku(), $stockIndicator);
@@ -67,7 +71,31 @@ class StockIndicatorExportContext implements Context
     }
 
     /**
-     * @Then I should get a stock indicator export document
+     * @When /^I run the stock indicator export for ([^ ]*) and ([^ ]*)$/
+     */
+    public function iRunTheStockIndicatorExportForTheAListOfProducts(string $firstSku, string $secondSku)
+    {
+        $skuList = SkuList::fromSkus([Sku::fromString($firstSku), Sku::fromString($secondSku)]);
+        $products = [];
+        foreach ($this->catalog as $product) {
+            if ($skuList->has($product->sku())) {
+                $products[] = $product;
+            }
+        }
+        $productList = ProductList::fromProducts($products);
+
+        $exportEntries = [];
+
+        foreach ($productList as $product) {
+            $stockIndicator = StockIndicator::fromProductStock($product->stock());
+            $exportEntries[] = DocumentEntry::fromSkuAndStockIndicator($product->sku(), $stockIndicator);
+        }
+
+        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries($exportEntries);
+    }
+
+    /**
+     * @Then a stock indicator export document should be generated
      */
     public function iShouldGetAStockIndicatorExportDocument()
     {
