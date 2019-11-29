@@ -29,6 +29,11 @@ final class Sku
         return $this->value;
     }
 
+    public function equals(Sku $sku): bool
+    {
+        return $this->value === $sku->value;
+    }
+
     private function __construct(string $value)
     {
         $this->value = $value;
