@@ -100,3 +100,9 @@ Feature: Stock Indicator Export
     And the document should contain an entry for INVIQA-002 with a yellow stock indicator
     And the document should contain an entry for INVIQA-003 with a green stock indicator
     And the document should not have any further entries
+
+  Scenario: Exporting stock indicator for non-existing product
+    Given the product with sku INVIQA-001 does not exists in the catalog
+    When I run the stock indicator export for that product
+    Then I should get an error about that the product does not exists
+    And a stock indicator export document should not be generated

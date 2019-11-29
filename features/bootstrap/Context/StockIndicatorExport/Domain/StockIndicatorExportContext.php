@@ -12,6 +12,7 @@ use Inviqa\StockIndicatorExport\Domain\Model\StockIndicator;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument\DocumentEntry;
 use PHPUnit\Framework\Assert;
+use RuntimeException;
 
 class StockIndicatorExportContext implements Context
 {
@@ -26,6 +27,9 @@ class StockIndicatorExportContext implements Context
 
     /** @var int */
     private $expectedNumberOfEntries = 0;
+
+    /** @var RuntimeException|null */
+    private $exportError = null;
 
     /**
      * @Given /^there is a product with sku ([^ ]*) in the catalog that has a stock level of (\d+)$/
@@ -46,13 +50,30 @@ class StockIndicatorExportContext implements Context
     }
 
     /**
+     * @Given /^the product with sku ([^ ]*) does not exists in the catalog$/
+     */
+    public function theProductWithSkuDoesNotExistsInTheCatalog(string $sku)
+    {
+        foreach ($this->catalog as $key => $product) {
+            if ($product->sku()->toString() === $sku) {
+                unset($this->catalog[$key]);
+            }
+        }
+    }
+
+    /**
      * @When I run the stock indicator export for that product
      */
     public function iRunTheStockIndicatorExportForThatProduct()
     {
-        $stockIndicator = StockIndicator::fromProductStock($this->product->stock());
-        $exportEntry = DocumentEntry::fromSkuAndStockIndicator($this->product->sku(), $stockIndicator);
-        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries([$exportEntry]);
+        if ($this->product === null) {
+            $this->exportError = new RuntimeException('Product does not exists');
+        } else {
+            $stockIndicator = StockIndicator::fromProductStock($this->product->stock());
+            $exportEntry = DocumentEntry::fromSkuAndStockIndicator($this->product->sku(), $stockIndicator);
+            $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries([$exportEntry]);
+        }
+
     }
 
     /**
@@ -157,11 +178,28 @@ class StockIndicatorExportContext implements Context
     }
 
     /**
-     * @Given /^the document should not have any further entries$/
+     * @Then /^the document should not have any further entries$/
      */
     public function theDocumentShouldNotHaveAnyFurtherEntries()
     {
         Assert::assertNotNull($this->stockIndicatorExportDocument);
         Assert::assertCount($this->expectedNumberOfEntries, $this->stockIndicatorExportDocument);
+    }
+
+    /**
+     * @Then /^I should get an error about that the product does not exists$/
+     */
+    public function iShouldGetAnErrorAboutThatTheProductDoesNotExists()
+    {
+        Assert::assertInstanceOf(RuntimeException::class, $this->exportError);
+        Assert::assertEquals($this->exportError->getMessage(), 'Product does not exists');
+    }
+
+    /**
+     * @Then /^a stock indicator export document should not be generated$/
+     */
+    public function aStockIndicatorExportDocumentShouldNotBeGenerated()
+    {
+        Assert::assertNull($this->stockIndicatorExportDocument);
     }
 }
