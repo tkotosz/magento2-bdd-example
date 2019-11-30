@@ -33,7 +33,7 @@ Feature: Stock Indicator Export
   Scenario: The stock indicator export fails if the specified product missing from the Catalog
     Given the product with sku "INVIQA-001" does not exists in the catalog
     When the user runs the stock indicator export for "INVIQA-001"
-    Then a "Product 'INVIQA-001' does not exists" error is shown
+    Then a product not found error for "INVIQA-001" is shown
     And a stock indicator export document is not generated
 
   Scenario: Out of stock product gets a red stock indicator
@@ -79,7 +79,7 @@ Feature: Stock Indicator Export
     Given there is a product in the catalog with sku "INVIQA-001"
     And the product with sku "INVIQA-002" does not exists in the catalog
     When the user runs the stock indicator export for "INVIQA-001" and "INVIQA-002"
-    Then a "Product 'INVIQA-002' does not exists" error is shown
+    Then a product not found error for "INVIQA-002" is shown
     And a stock indicator export document is not generated
 
   Scenario: The stock indicator export can be run for the complete catalog

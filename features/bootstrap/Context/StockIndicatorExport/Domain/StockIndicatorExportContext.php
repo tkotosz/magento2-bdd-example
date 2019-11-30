@@ -6,7 +6,9 @@ use Behat\Behat\Context\Context;
 use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
 use Inviqa\StockIndicatorExport\Domain\Model\Product;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Sku;
+use Inviqa\StockIndicatorExport\Domain\Model\Product\SkuList;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Stock;
+use Inviqa\StockIndicatorExport\Domain\Model\ProductList;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicator;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument\DocumentEntry;
@@ -27,7 +29,7 @@ class StockIndicatorExportContext implements Context
     private $expectedNumberOfDocumentEntries = 0;
 
     /** @var ProductNotFoundException|null */
-    private $exportException = null;
+    private $exportError = null;
 
     /** @var StockIndicator|null */
     private $inspectedStockIndicator = null;
@@ -35,7 +37,7 @@ class StockIndicatorExportContext implements Context
     /**
      * @Transform
      */
-    public function transformSku(string $sku): Sku
+    public function transformToSku(string $sku): Sku
     {
         return Sku::fromString($sku);
     }
@@ -43,7 +45,7 @@ class StockIndicatorExportContext implements Context
     /**
      * @Transform
      */
-    public function transformStock(string $stock): Stock
+    public function transformToStock(string $stock): Stock
     {
         return Stock::fromInt(intval($stock));
     }
@@ -51,9 +53,9 @@ class StockIndicatorExportContext implements Context
     /**
      * @Transform
      */
-    public function transformStockIndicator(string $type): StockIndicator
+    public function transformToStockIndicator(string $indicatorType): StockIndicator
     {
-        return StockIndicator::fromString(strtoupper($type));
+        return StockIndicator::fromString(strtoupper($indicatorType));
     }
 
     /**
@@ -97,7 +99,7 @@ class StockIndicatorExportContext implements Context
      */
     public function theStockIndicatorExportDocumentHasBeenGeneratedForThisProduct()
     {
-        $this->theUserRunsTheStockIndicatorExportFor($this->product->sku());
+        $this->theUserRunsTheStockIndicatorExportForASku($this->product->sku());
     }
 
     /**
@@ -115,12 +117,12 @@ class StockIndicatorExportContext implements Context
     /**
      * @When the user runs the stock indicator export for :sku
      */
-    public function theUserRunsTheStockIndicatorExportFor(Sku $sku)
+    public function theUserRunsTheStockIndicatorExportForASku(Sku $sku)
     {
         $product = $this->catalog[$sku->toString()] ?? null;
 
         if ($product === null) {
-            $this->exportException = ProductNotFoundException::fromSku($sku);
+            $this->exportError = ProductNotFoundException::fromSku($sku);
             return;
         }
 
@@ -149,25 +151,20 @@ class StockIndicatorExportContext implements Context
     /**
      * @When the user runs the stock indicator export for :firstSku and :secondSku
      */
-    public function theUserRunsTheStockIndicatorExportForAnd(Sku $firstSku, Sku $secondSku)
+    public function theUserRunsTheStockIndicatorExportForAListOfSkus(Sku $firstSku, Sku $secondSku)
     {
-        $firstProduct = $this->catalog[$firstSku->toString()] ?? null;
-        $secondProduct = $this->catalog[$secondSku->toString()] ?? null;
-
-        if ($firstProduct === null) {
-            $this->exportException = ProductNotFoundException::fromSku($firstSku);
-            return;
-        }
-
-        if ($secondProduct === null) {
-            $this->exportException = ProductNotFoundException::fromSku($secondSku);
-            return;
+        $products = [];
+        foreach (SkuList::fromSkus([$firstSku, $secondSku]) as $sku) {
+            $product = $this->catalog[$sku->toString()] ?? null;
+            if ($product === null) {
+                $this->exportError = ProductNotFoundException::fromSku($sku);
+                return;
+            }
+            $products[] = $product;
         }
 
         $entries = [];
-
-        /** @var Product $product */
-        foreach ([$firstProduct, $secondProduct] as $product) {
+        foreach (ProductList::fromProducts($products) as $product) {
             $entries[] = DocumentEntry::fromSkuAndStockIndicator(
                 $product->sku(),
                 StockIndicator::fromProductStock($product->stock())
@@ -229,12 +226,11 @@ class StockIndicatorExportContext implements Context
     }
 
     /**
-     * @Then a :errorMessage error is shown
+     * @Then a product not found error for :sku is shown
      */
-    public function aErrorIsShown(string $errorMessage)
+    public function aProductNotFoundErrorForSkuIsShown(Sku $sku)
     {
-        Assert::assertInstanceOf(ProductNotFoundException::class, $this->exportException);
-        Assert::assertEquals($errorMessage, $this->exportException->getMessage());
+        Assert::assertEquals(ProductNotFoundException::fromSku($sku), $this->exportError);
     }
 
     /**
