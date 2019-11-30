@@ -9,7 +9,7 @@ use Inviqa\StockIndicatorExport\Domain\Model\Product\Stock;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicator;
 use PhpSpec\ObjectBehavior;
 
-class StockIndicatorSpec extends ObjectBehavior
+final class StockIndicatorSpec extends ObjectBehavior
 {
     function it_can_be_created_from_red_stock_indicator_string()
     {

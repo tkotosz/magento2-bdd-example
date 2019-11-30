@@ -7,7 +7,7 @@ use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Sku;
 use PhpSpec\ObjectBehavior;
 
-class ProductNotFoundExceptionSpec extends ObjectBehavior
+final class ProductNotFoundExceptionSpec extends ObjectBehavior
 {
     function it_can_be_created_from_product_sku()
     {

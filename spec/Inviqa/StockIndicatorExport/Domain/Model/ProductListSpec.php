@@ -9,7 +9,7 @@ use Inviqa\StockIndicatorExport\Domain\Model\Product\Stock;
 use Inviqa\StockIndicatorExport\Domain\Model\ProductList;
 use PhpSpec\ObjectBehavior;
 
-class ProductListSpec extends ObjectBehavior
+final class ProductListSpec extends ObjectBehavior
 {
     function it_can_be_created_from_a_list_of_products()
     {

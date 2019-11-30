@@ -7,7 +7,7 @@ use Inviqa\StockIndicatorExport\Domain\Model\Product\Sku;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Stock;
 use PhpSpec\ObjectBehavior;
 
-class ProductSpec extends ObjectBehavior
+final class ProductSpec extends ObjectBehavior
 {
     function it_can_be_created_from_sku()
     {

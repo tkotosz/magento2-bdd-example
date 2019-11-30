@@ -6,7 +6,7 @@ use InvalidArgumentException;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Stock;
 use PhpSpec\ObjectBehavior;
 
-class StockSpec extends ObjectBehavior
+final class StockSpec extends ObjectBehavior
 {
     function it_can_be_created_from_a_positive_integer_value()
     {

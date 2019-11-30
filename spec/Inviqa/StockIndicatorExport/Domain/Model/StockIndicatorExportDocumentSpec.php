@@ -10,7 +10,7 @@ use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument\Docume
 use IteratorAggregate;
 use PhpSpec\ObjectBehavior;
 
-class StockIndicatorExportDocumentSpec extends ObjectBehavior
+final class StockIndicatorExportDocumentSpec extends ObjectBehavior
 {
     function it_can_be_created_from_document_entries()
     {

@@ -6,7 +6,7 @@ use InvalidArgumentException;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Sku;
 use PhpSpec\ObjectBehavior;
 
-class SkuSpec extends ObjectBehavior
+final class SkuSpec extends ObjectBehavior
 {
     function it_can_be_created_from_a_valid_string()
     {

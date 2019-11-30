@@ -1,10 +1,10 @@
 Feature: Stock Indicator Export
   As a member of the marketing team
   In order to be able to review the stock state of the whole product catalog
-  I should be able to export a stock indicator for all products
+  I should be able to export stock indicator for all products
 
   Requirements:
-    - The stock indicator export generates a document with Product Sku - Stock Indicator pairs
+    - The stock indicator export should generate a document with Product Sku - Stock Indicator pairs
     - The stock indicator export can be run for a single product
     - The stock indicator export can be run for a list of products
     - The stock indicator export can be run for the complete catalog
@@ -22,8 +22,6 @@ Feature: Stock Indicator Export
     - Stock Indicator: A label which describes the state of the product stock. Can be RED, YELLOW or GREEN depending on the available stock. See Rules below.
     - Stock Indicator Export Document: A document containing Stock Indicator Export Document Entries.
     - Stock Indicator Export Document Entry: A Product Sku - Stock Indicator pair describing the stock status of a product.
-    - Product Sku List: A list of Product Skus.
-    - Product List: A list of Products.
 
   Scenario: The stock indicator export can be run for a single product
     Given there is a product in the catalog with sku "INVIQA-001"
