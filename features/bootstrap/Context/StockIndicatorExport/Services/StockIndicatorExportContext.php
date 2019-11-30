@@ -3,16 +3,13 @@
 namespace Inviqa\Acceptance\Context\StockIndicatorExport\Services;
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
 use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
 use Inviqa\StockIndicatorExport\Domain\Model\Product;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Sku;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\SkuList;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Stock;
-use Inviqa\StockIndicatorExport\Domain\Model\ProductList;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicator;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument;
-use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument\DocumentEntry;
 use Inviqa\StockIndicatorExport\Domain\Service\StockIndicatorExporter;
 use Inviqa\StockIndicatorExport\Infrastructure\Test\Repository\InMemoryCatalog;
 use Inviqa\StockIndicatorExport\Infrastructure\Test\Repository\InMemoryStockIndicatorExportDocumentRepository;
