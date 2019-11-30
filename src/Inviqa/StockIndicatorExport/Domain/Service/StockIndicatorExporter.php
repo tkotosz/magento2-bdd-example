@@ -5,6 +5,7 @@ namespace Inviqa\StockIndicatorExport\Domain\Service;
 use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Sku;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\SkuList;
+use Inviqa\StockIndicatorExport\Domain\Model\ProductList;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicator;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument\DocumentEntry;
@@ -35,16 +36,7 @@ class StockIndicatorExporter
      */
     public function export(Sku $sku): void
     {
-        $product = $this->catalog->findBySku($sku);
-
-        $entry = DocumentEntry::fromSkuAndStockIndicator(
-            $product->sku(),
-            StockIndicator::fromProductStock($product->stock())
-        );
-
-        $document = StockIndicatorExportDocument::fromEntries([$entry]);
-
-        $this->exportDocumentRepository->save($document);
+        $this->exportProducts(ProductList::fromProducts([$this->catalog->findBySku($sku)]));
     }
 
     /**
@@ -55,31 +47,25 @@ class StockIndicatorExporter
      */
     public function exportList(SkuList $skuList): void
     {
-        $entries = [];
-        foreach ($this->catalog->findBySkuList($skuList) as $product) {
-            $entries[] = DocumentEntry::fromSkuAndStockIndicator(
-                $product->sku(),
-                StockIndicator::fromProductStock($product->stock())
-            );
-        }
-
-        $document = StockIndicatorExportDocument::fromEntries($entries);
-
-        $this->exportDocumentRepository->save($document);
+        $this->exportProducts($this->catalog->findBySkuList($skuList));
     }
 
     public function exportAll(): void
     {
+        $this->exportProducts($this->catalog->findAll());
+    }
+
+    private function exportProducts(ProductList $productList): void
+    {
         $entries = [];
-        foreach ($this->catalog->findAll() as $product) {
+
+        foreach ($productList as $product) {
             $entries[] = DocumentEntry::fromSkuAndStockIndicator(
                 $product->sku(),
                 StockIndicator::fromProductStock($product->stock())
             );
         }
 
-        $document = StockIndicatorExportDocument::fromEntries($entries);
-
-        $this->exportDocumentRepository->save($document);
+        $this->exportDocumentRepository->save(StockIndicatorExportDocument::fromEntries($entries));
     }
 }
