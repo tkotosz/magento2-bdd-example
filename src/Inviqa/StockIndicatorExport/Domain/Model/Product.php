@@ -15,6 +15,11 @@ final class Product
     /** @var Stock */
     private $stock;
 
+    public static function fromSku(Sku $sku): Product
+    {
+        return new self($sku, Stock::fromInt(0));
+    }
+
     public static function fromSkuAndStock(Sku $sku, Stock $stock): Product
     {
         return new self($sku, $stock);

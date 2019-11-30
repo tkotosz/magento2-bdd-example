@@ -3,16 +3,14 @@
 namespace Inviqa\Acceptance\Context\StockIndicatorExport\Domain;
 
 use Behat\Behat\Context\Context;
+use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
 use Inviqa\StockIndicatorExport\Domain\Model\Product;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Sku;
-use Inviqa\StockIndicatorExport\Domain\Model\Product\SkuList;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Stock;
-use Inviqa\StockIndicatorExport\Domain\Model\ProductList;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicator;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument\DocumentEntry;
 use PHPUnit\Framework\Assert;
-use RuntimeException;
 
 class StockIndicatorExportContext implements Context
 {
@@ -22,14 +20,20 @@ class StockIndicatorExportContext implements Context
     /** @var Product|null */
     private $product = null;
 
-    /** @var StockIndicatorExportDocument */
-    private $stockIndicatorExportDocument;
+    /** @var int */
+    private $expectedNumberOfCatalogEntries = 0;
+
+    /** @var StockIndicatorExportDocument|null */
+    private $stockIndicatorExportDocument = null;
 
     /** @var int */
-    private $expectedNumberOfEntries = 0;
+    private $expectedNumberOfDocumentEntries = 0;
 
-    /** @var RuntimeException|null */
-    private $exportError = null;
+    /** @var ProductNotFoundException|null */
+    private $exportException = null;
+
+    /** @var StockIndicator|null */
+    private $inspectedStockIndicator = null;
 
     /**
      * @Transform
@@ -48,7 +52,7 @@ class StockIndicatorExportContext implements Context
     }
 
     /**
-     * @Transform /^([red|yellow|green]+) stock indicator$/
+     * @Transform
      */
     public function transformStockIndicator(string $type): StockIndicator
     {
@@ -56,21 +60,60 @@ class StockIndicatorExportContext implements Context
     }
 
     /**
-     * @Given there is a product with sku :sku in the catalog that has a stock level of :stock
+     * @Given there is a product in the catalog with sku :sku
      */
-    public function thereIsAProductWithSkuInTheCatalogThatHasAStockLevelOf(Sku $sku, Stock $stock)
+    public function thereIsAProductInTheCatalogWithSku(Sku $sku)
     {
-        $product = Product::fromSkuAndStock($sku, $stock);
-        $this->catalog[] = $product;
+        $product = Product::fromSku($sku);
+        $this->catalog[$product->sku()->toString()] = $product;
         $this->product = $product;
+        $this->expectedNumberOfCatalogEntries++;
     }
 
     /**
-     * @Given there are no other products in the catalog
+     * @When the user runs the stock indicator export for this product
      */
-    public function thereAreNoOtherProductsInTheCatalog()
+    public function theUserRunsTheStockIndicatorExportForThisProduct()
     {
-        // no-op
+        $entry = DocumentEntry::fromSkuAndStockIndicator(
+            $this->product->sku(),
+            StockIndicator::fromProductStock($this->product->stock())
+        );
+        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries([$entry]);
+    }
+
+    /**
+     * @Then a stock indicator export document is generated
+     */
+    public function aStockIndicatorExportDocumentIsGenerated()
+    {
+        Assert::assertNotNull($this->stockIndicatorExportDocument);
+    }
+
+    /**
+     * @Then the document contains an entry for :sku
+     */
+    public function theDocumentContainsAnEntryFor(Sku $sku)
+    {
+        Assert::assertNotNull($this->stockIndicatorExportDocument);
+
+        $foundEntry = null;
+        foreach ($this->stockIndicatorExportDocument as $entry) {
+            if ($entry->sku()->equals($sku)) {
+                $foundEntry = $entry;
+            }
+        }
+
+        Assert::assertNotNull($foundEntry);
+        $this->expectedNumberOfDocumentEntries++;
+    }
+
+    /**
+     * @Then the document does not have any further entries
+     */
+    public function theDocumentDoesNotHaveAnyFurtherEntries()
+    {
+        Assert::assertCount($this->expectedNumberOfDocumentEntries, $this->stockIndicatorExportDocument);
     }
 
     /**
@@ -78,116 +121,140 @@ class StockIndicatorExportContext implements Context
      */
     public function theProductWithSkuDoesNotExistsInTheCatalog(Sku $sku)
     {
-        foreach ($this->catalog as $key => $product) {
-            if ($product->sku()->equals($sku)) {
-                unset($this->catalog[$key]);
-            }
-        }
+        unset($this->catalog[$sku->toString()]);
     }
 
     /**
-     * @When I run the stock indicator export for that product
+     * @When the user runs the stock indicator export for :sku
      */
-    public function iRunTheStockIndicatorExportForThatProduct()
+    public function theUserRunsTheStockIndicatorExportFor(Sku $sku)
     {
-        if ($this->product === null) {
-            $this->exportError = new RuntimeException('Product does not exists');
-        } else {
-            $stockIndicator = StockIndicator::fromProductStock($this->product->stock());
-            $exportEntry = DocumentEntry::fromSkuAndStockIndicator($this->product->sku(), $stockIndicator);
-            $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries([$exportEntry]);
+        $product = $this->catalog[$sku->toString()] ?? null;
+
+        if ($product === null) {
+            $this->exportException = ProductNotFoundException::fromSku($sku);
+            return;
         }
 
+        $entry = DocumentEntry::fromSkuAndStockIndicator(
+            $product->sku(),
+            StockIndicator::fromProductStock($product->stock())
+        );
+        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries([$entry]);
     }
 
     /**
-     * @When I run the stock indicator export for the catalog
+     * @Then a :errorMessage error is shown
      */
-    public function iRunTheStockIndicatorExportForTheCatalog()
+    public function aErrorIsShown(string $errorMessage)
     {
-        $exportEntries = [];
-
-        foreach ($this->catalog as $product) {
-            $stockIndicator = StockIndicator::fromProductStock($product->stock());
-            $exportEntries[] = DocumentEntry::fromSkuAndStockIndicator($product->sku(), $stockIndicator);
-        }
-
-        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries($exportEntries);
+        Assert::assertInstanceOf(ProductNotFoundException::class, $this->exportException);
+        Assert::assertEquals($errorMessage, $this->exportException->getMessage());
     }
 
     /**
-     * @When I run the stock indicator export for :firstSku and :secondSku
+     * @Then a stock indicator export document is not generated
      */
-    public function iRunTheStockIndicatorExportForTheAListOfProducts(Sku $firstSku, Sku $secondSku)
-    {
-        $skuList = SkuList::fromSkus([$firstSku, $secondSku]);
-        $products = [];
-        foreach ($this->catalog as $product) {
-            if ($skuList->has($product->sku())) {
-                $products[] = $product;
-            }
-        }
-        $productList = ProductList::fromProducts($products);
-
-        $exportEntries = [];
-
-        foreach ($productList as $product) {
-            $stockIndicator = StockIndicator::fromProductStock($product->stock());
-            $exportEntries[] = DocumentEntry::fromSkuAndStockIndicator($product->sku(), $stockIndicator);
-        }
-
-        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries($exportEntries);
-    }
-
-    /**
-     * @Then a stock indicator export document should be generated
-     */
-    public function iShouldGetAStockIndicatorExportDocument()
-    {
-        Assert::assertInstanceOf(StockIndicatorExportDocument::class, $this->stockIndicatorExportDocument);
-    }
-
-    /**
-     * @Then /^the document should contain an entry for "([^"]+)" with a (([red|yellow|green]+) stock indicator)$/
-     */
-    public function theDocumentShouldContainAnEntryForProductWithARedStockIndicator(Sku $sku, StockIndicator $expectedStockIndicator)
-    {
-        $productDocumentEntry = null;
-
-        foreach ($this->stockIndicatorExportDocument as $documentEntry) {
-            if ($documentEntry->sku()->equals($sku)) {
-                $productDocumentEntry = $documentEntry;
-            }
-        }
-
-        Assert::assertNotNull($productDocumentEntry);
-        Assert::assertEquals($expectedStockIndicator, $productDocumentEntry->stockIndicator());
-        $this->expectedNumberOfEntries++;
-    }
-
-    /**
-     * @Then the document should not have any further entries
-     */
-    public function theDocumentShouldNotHaveAnyFurtherEntries()
-    {
-        Assert::assertNotNull($this->stockIndicatorExportDocument);
-        Assert::assertCount($this->expectedNumberOfEntries, $this->stockIndicatorExportDocument);
-    }
-
-    /**
-     * @Then I should get an error about that the product does not exists
-     */
-    public function iShouldGetAnErrorAboutThatTheProductDoesNotExists()
-    {
-        Assert::assertInstanceOf(RuntimeException::class, $this->exportError);
-        Assert::assertEquals($this->exportError->getMessage(), 'Product does not exists');
-    }
-
-    /**
-     * @Then a stock indicator export document should not be generated
-     */
-    public function aStockIndicatorExportDocumentShouldNotBeGenerated()
+    public function aStockIndicatorExportDocumentIsNotGenerated()
     {
         Assert::assertNull($this->stockIndicatorExportDocument);
+    }
+
+    /**
+     * @Given there is a product in the catalog that has a stock level of :stock
+     */
+    public function thereIsAProductInTheCatalogThatHasAStockLevelOf(Stock $stock)
+    {
+        $product = Product::fromSkuAndStock(Sku::fromString(uniqid()), $stock);
+        $this->catalog[$product->sku()->toString()] = $product;
+        $this->product = $product;
+        $this->expectedNumberOfCatalogEntries++;
+    }
+
+    /**
+     * @Given the stock indicator export document has been generated for this product
+     */
+    public function theStockIndicatorExportDocumentHasBeenGeneratedForThisProduct()
+    {
+        $this->theUserRunsTheStockIndicatorExportFor($this->product->sku());
+    }
+
+    /**
+     * @When the user checks the stock indicator for this product in the document
+     */
+    public function theUserChecksTheStockIndicatorForThisProductInTheDocument()
+    {
+        $this->inspectedStockIndicator = null;
+
+        foreach ($this->stockIndicatorExportDocument as $entry) {
+            if ($entry->sku()->equals($this->product->sku())) {
+                $this->inspectedStockIndicator = $entry->stockIndicator();
+                break;
+            }
+        }
+    }
+
+    /**
+     * @Then the user sees a :stockIndicator stock indicator
+     */
+    public function theUserSeesAStockIndicator(StockIndicator $stockIndicator)
+    {
+        Assert::assertEquals($stockIndicator, $this->inspectedStockIndicator);
+    }
+
+    /**
+     * @When the user runs the stock indicator export for :firstSku and :secondSku
+     */
+    public function theUserRunsTheStockIndicatorExportForAnd(Sku $firstSku, Sku $secondSku)
+    {
+        $firstProduct = $this->catalog[$firstSku->toString()] ?? null;
+        $secondProduct = $this->catalog[$secondSku->toString()] ?? null;
+
+        if ($firstProduct === null) {
+            $this->exportException = ProductNotFoundException::fromSku($firstSku);
+            return;
+        }
+
+        if ($secondProduct === null) {
+            $this->exportException = ProductNotFoundException::fromSku($secondSku);
+            return;
+        }
+
+        $entries = [];
+
+        /** @var Product $product */
+        foreach ([$firstProduct, $secondProduct] as $product) {
+            $entries[] = DocumentEntry::fromSkuAndStockIndicator(
+                $product->sku(),
+                StockIndicator::fromProductStock($product->stock())
+            );
+        }
+
+        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries($entries);
+    }
+
+    /**
+     * @Given there are no other products in the catalog
+     */
+    public function thereAreNoOtherProductsInTheCatalog()
+    {
+        Assert::assertCount($this->expectedNumberOfCatalogEntries, $this->catalog);
+    }
+
+    /**
+     * @When the user runs the stock indicator export for the complete catalog
+     */
+    public function theUserRunsTheStockIndicatorExportForTheCompleteProduct()
+    {
+        $entries = [];
+
+        foreach ($this->catalog as $product) {
+            $entries[] = DocumentEntry::fromSkuAndStockIndicator(
+                $product->sku(),
+                StockIndicator::fromProductStock($product->stock())
+            );
+        }
+
+        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries($entries);
     }
 }
