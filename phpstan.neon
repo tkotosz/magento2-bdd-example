@@ -6,3 +6,5 @@ parameters:
        - src
     classesAllowedToBeExtended:
        - RuntimeException
+    excludes_analyse:
+       - */src/**/registration.php

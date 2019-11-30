@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inviqa\StockIndicatorExport\Domain\Repository;
 
 use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
@@ -14,14 +16,16 @@ interface Catalog
      * @param Sku $sku
      *
      * @return Product
+     *
      * @throws ProductNotFoundException
      */
     public function findBySku(Sku $sku): Product;
 
     /**
-     * @param Sku $sku
+     * @param SkuList $skuList
      *
      * @return ProductList
+     *
      * @throws ProductNotFoundException
      */
     public function findBySkuList(SkuList $skuList): ProductList;

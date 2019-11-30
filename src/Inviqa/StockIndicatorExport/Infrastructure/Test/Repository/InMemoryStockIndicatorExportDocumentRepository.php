@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inviqa\StockIndicatorExport\Infrastructure\Test\Repository;
 
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument;
 use Inviqa\StockIndicatorExport\Domain\Repository\StockIndicatorExportDocumentRepository;
+use RuntimeException;
 
-class InMemoryStockIndicatorExportDocumentRepository implements StockIndicatorExportDocumentRepository
+final class InMemoryStockIndicatorExportDocumentRepository implements StockIndicatorExportDocumentRepository
 {
     /** @var StockIndicatorExportDocument|null */
     private $lastDocument = null;
@@ -15,8 +18,12 @@ class InMemoryStockIndicatorExportDocumentRepository implements StockIndicatorEx
         $this->lastDocument = $document;
     }
 
-    public function getLast(): ?StockIndicatorExportDocument
+    public function getLast(): StockIndicatorExportDocument
     {
+        if ($this->lastDocument === null) {
+            throw new RuntimeException('Document not found');
+        }
+
         return $this->lastDocument;
     }
 

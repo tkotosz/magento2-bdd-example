@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inviqa\StockIndicatorExport\Domain\Repository;
 
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument;

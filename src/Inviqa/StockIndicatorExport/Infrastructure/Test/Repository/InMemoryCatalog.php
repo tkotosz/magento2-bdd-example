@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inviqa\StockIndicatorExport\Infrastructure\Test\Repository;
 
 use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
@@ -9,14 +11,11 @@ use Inviqa\StockIndicatorExport\Domain\Model\Product\SkuList;
 use Inviqa\StockIndicatorExport\Domain\Model\ProductList;
 use Inviqa\StockIndicatorExport\Domain\Repository\Catalog;
 
-class InMemoryCatalog implements Catalog
+final class InMemoryCatalog implements Catalog
 {
     /** @var Product[] */
     private $products = [];
 
-    /**
-     * @inheritDoc
-     */
     public function findBySku(Sku $sku): Product
     {
         if (!array_key_exists($sku->toString(), $this->products)) {
@@ -26,9 +25,6 @@ class InMemoryCatalog implements Catalog
         return $this->products[$sku->toString()];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function findBySkuList(SkuList $skuList): ProductList
     {
         $products = [];
@@ -44,9 +40,6 @@ class InMemoryCatalog implements Catalog
         return ProductList::fromProducts($products);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function findAll(): ProductList
     {
         return ProductList::fromProducts($this->products);

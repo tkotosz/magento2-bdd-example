@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inviqa\StockIndicatorExport\Domain\Service;
 
 use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
@@ -12,7 +14,7 @@ use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument\Docume
 use Inviqa\StockIndicatorExport\Domain\Repository\Catalog;
 use Inviqa\StockIndicatorExport\Domain\Repository\StockIndicatorExportDocumentRepository;
 
-class StockIndicatorExporter
+final class StockIndicatorExporter
 {
     /** @var Catalog */
     private $catalog;
@@ -32,6 +34,7 @@ class StockIndicatorExporter
      * @param Sku $sku
      *
      * @return void
+     *
      * @throws ProductNotFoundException
      */
     public function export(Sku $sku): void
@@ -43,6 +46,7 @@ class StockIndicatorExporter
      * @param SkuList $skuList
      *
      * @return void
+     *
      * @throws ProductNotFoundException
      */
     public function exportList(SkuList $skuList): void
