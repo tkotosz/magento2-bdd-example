@@ -35,30 +35,6 @@ class StockIndicatorExportContext implements Context
     private $inspectedStockIndicator = null;
 
     /**
-     * @Transform
-     */
-    public function transformToSku(string $sku): Sku
-    {
-        return Sku::fromString($sku);
-    }
-
-    /**
-     * @Transform
-     */
-    public function transformToStock(string $stock): Stock
-    {
-        return Stock::fromInt(intval($stock));
-    }
-
-    /**
-     * @Transform
-     */
-    public function transformToStockIndicator(string $indicatorType): StockIndicator
-    {
-        return StockIndicator::fromString(strtoupper($indicatorType));
-    }
-
-    /**
      * @Given there is a product in the catalog with sku :sku
      */
     public function thereIsAProductInTheCatalogWithSku(Sku $sku)
