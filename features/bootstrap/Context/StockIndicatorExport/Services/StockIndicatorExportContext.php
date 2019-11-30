@@ -13,10 +13,16 @@ use Inviqa\StockIndicatorExport\Domain\Model\ProductList;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicator;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument\DocumentEntry;
+use Inviqa\StockIndicatorExport\Domain\Service\StockIndicatorExporter;
+use Inviqa\StockIndicatorExport\Infrastructure\Test\Repository\InMemoryCatalog;
+use Inviqa\StockIndicatorExport\Infrastructure\Test\Repository\InMemoryStockIndicatorExportDocumentRepository;
 use PHPUnit\Framework\Assert;
 
 class StockIndicatorExportContext implements Context
 {
+    /** @var InMemoryCatalog */
+    private $catalog;
+
     /** @var Product|null */
     private $product = null;
 
@@ -32,12 +38,39 @@ class StockIndicatorExportContext implements Context
     /** @var StockIndicator|null */
     private $inspectedStockIndicator = null;
 
+    /** @var StockIndicatorExporter */
+    private $stockIndicatorExporter;
+
+    /** @var InMemoryStockIndicatorExportDocumentRepository */
+    private $stockIndicatorExportDocumentRepository;
+
+    public function __construct(
+        InMemoryCatalog $catalog,
+        StockIndicatorExporter $stockIndicatorExporter,
+        InMemoryStockIndicatorExportDocumentRepository $stockIndicatorExportDocumentRepository
+    ) {
+        $this->catalog = $catalog;
+        $this->stockIndicatorExporter = $stockIndicatorExporter;
+        $this->stockIndicatorExportDocumentRepository = $stockIndicatorExportDocumentRepository;
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function setUp()
+    {
+        $this->catalog->clear();
+        $this->stockIndicatorExportDocumentRepository->clear();
+    }
+
     /**
      * @Given there is a product in the catalog with sku :sku
      */
     public function thereIsAProductInTheCatalogWithSku(Sku $sku)
     {
-        throw new PendingException('TODO');
+        $product = Product::fromSku($sku);
+        $this->catalog->add($product);
+        $this->product = $product;
     }
 
     /**
@@ -45,7 +78,9 @@ class StockIndicatorExportContext implements Context
      */
     public function thereIsAProductInTheCatalogThatHasAStockLevelOf(Stock $stock)
     {
-        throw new PendingException('TODO');
+        $product = Product::fromSkuAndStock(Sku::fromString(uniqid()), $stock);
+        $this->catalog->add($product);
+        $this->product = $product;
     }
 
     /**
@@ -53,7 +88,7 @@ class StockIndicatorExportContext implements Context
      */
     public function theProductWithSkuDoesNotExistsInTheCatalog(Sku $sku)
     {
-        throw new PendingException('TODO');
+        $this->catalog->remove($sku);
     }
 
     /**
@@ -61,7 +96,7 @@ class StockIndicatorExportContext implements Context
      */
     public function thereAreNoOtherProductsInTheCatalog()
     {
-        throw new PendingException('TODO');
+        // no-op
     }
 
     /**
@@ -69,7 +104,7 @@ class StockIndicatorExportContext implements Context
      */
     public function theStockIndicatorExportDocumentHasBeenGeneratedForThisProduct()
     {
-        throw new PendingException('TODO');
+        $this->theUserRunsTheStockIndicatorExportForASku($this->product->sku());
     }
 
     /**
@@ -77,7 +112,8 @@ class StockIndicatorExportContext implements Context
      */
     public function theUserRunsTheStockIndicatorExportForThisProduct()
     {
-        throw new PendingException('TODO');
+        $this->stockIndicatorExporter->export($this->product->sku());
+        $this->stockIndicatorExportDocument = $this->stockIndicatorExportDocumentRepository->getLast();
     }
 
     /**
@@ -85,15 +121,12 @@ class StockIndicatorExportContext implements Context
      */
     public function theUserRunsTheStockIndicatorExportForASku(Sku $sku)
     {
-        throw new PendingException('TODO');
-    }
-
-    /**
-     * @When the user checks the stock indicator for this product in the document
-     */
-    public function theUserChecksTheStockIndicatorForThisProductInTheDocument()
-    {
-        throw new PendingException('TODO');
+        try {
+            $this->stockIndicatorExporter->export($sku);
+            $this->stockIndicatorExportDocument = $this->stockIndicatorExportDocumentRepository->getLast();
+        } catch (ProductNotFoundException $e) {
+            $this->exportError = $e;
+        }
     }
 
     /**
@@ -101,15 +134,36 @@ class StockIndicatorExportContext implements Context
      */
     public function theUserRunsTheStockIndicatorExportForAListOfSkus(Sku $firstSku, Sku $secondSku)
     {
-        throw new PendingException('TODO');
+        try {
+            $this->stockIndicatorExporter->exportList(SkuList::fromSkus([$firstSku, $secondSku]));
+            $this->stockIndicatorExportDocument = $this->stockIndicatorExportDocumentRepository->getLast();
+        } catch (ProductNotFoundException $e) {
+            $this->exportError = $e;
+        }
     }
 
     /**
      * @When the user runs the stock indicator export for the complete catalog
      */
-    public function theUserRunsTheStockIndicatorExportForTheCompleteProduct()
+    public function theUserRunsTheStockIndicatorExportForTheCompleteCatalog()
     {
-        throw new PendingException('TODO');
+        $this->stockIndicatorExporter->exportAll();
+        $this->stockIndicatorExportDocument = $this->stockIndicatorExportDocumentRepository->getLast();
+    }
+
+    /**
+     * @When the user checks the stock indicator for this product in the document
+     */
+    public function theUserChecksTheStockIndicatorForThisProductInTheDocument()
+    {
+        $this->inspectedStockIndicator = null;
+
+        foreach ($this->stockIndicatorExportDocument as $entry) {
+            if ($entry->sku()->equals($this->product->sku())) {
+                $this->inspectedStockIndicator = $entry->stockIndicator();
+                break;
+            }
+        }
     }
 
     /**
