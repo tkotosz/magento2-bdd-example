@@ -23,6 +23,7 @@ Feature: Stock Indicator Export
     - Stock Indicator Export Document: A document containing Stock Indicator Export Document Entries.
     - Stock Indicator Export Document Entry: A Product Sku - Stock Indicator pair describing the stock status of a product.
 
+  @integration
   Scenario: The stock indicator export can be run for a single product
     Given there is a product in the catalog with sku "INVIQA-001"
     When the user runs the stock indicator export for this product
@@ -30,6 +31,7 @@ Feature: Stock Indicator Export
     And the document contains an entry for "INVIQA-001"
     And the document does not have any further entries
 
+  @integration
   Scenario: The stock indicator export fails if the specified product missing from the Catalog
     Given the product with sku "INVIQA-001" does not exists in the catalog
     When the user runs the stock indicator export for "INVIQA-001"
@@ -66,6 +68,7 @@ Feature: Stock Indicator Export
       | 11         |
       | 20         |
 
+  @integration
   Scenario: The stock indicator export can be run for a list of products
     Given there is a product in the catalog with sku "INVIQA-001"
     And there is a product in the catalog with sku "INVIQA-002"
@@ -75,6 +78,7 @@ Feature: Stock Indicator Export
     And the document contains an entry for "INVIQA-002"
     And the document does not have any further entries
 
+  @integration
   Scenario: The stock indicator export fails if one of the specified products missing from the Catalog
     Given there is a product in the catalog with sku "INVIQA-001"
     And the product with sku "INVIQA-002" does not exists in the catalog
@@ -82,6 +86,7 @@ Feature: Stock Indicator Export
     Then a product not found error for "INVIQA-002" is shown
     And a stock indicator export document is not generated
 
+  @integration
   Scenario: The stock indicator export can be run for the complete catalog
     Given there is a product in the catalog with sku "INVIQA-001"
     And there is a product in the catalog with sku "INVIQA-002"

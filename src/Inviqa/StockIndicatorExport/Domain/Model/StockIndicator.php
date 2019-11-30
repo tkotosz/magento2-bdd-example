@@ -57,6 +57,11 @@ final class StockIndicator
         return self::green();
     }
 
+    public function toString(): string
+    {
+        return $this->value;
+    }
+
     private function __construct(string $value)
     {
         $this->value = $value;
