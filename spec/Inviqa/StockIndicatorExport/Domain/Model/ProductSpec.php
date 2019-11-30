@@ -9,7 +9,17 @@ use PhpSpec\ObjectBehavior;
 
 class ProductSpec extends ObjectBehavior
 {
-    function it_can_be_created_from_sku_name_and_stock()
+    function it_can_be_created_from_sku()
+    {
+        $this->beConstructedThrough(
+            'fromSku',
+            [Sku::fromString('foo')]
+        );
+
+        $this->shouldHaveType(Product::class);
+    }
+
+    function it_can_be_created_from_sku_and_stock()
     {
         $this->beConstructedThrough(
             'fromSkuAndStock',

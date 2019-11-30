@@ -4,3 +4,5 @@ parameters:
     level: max
     paths:
        - src
+    classesAllowedToBeExtended:
+       - RuntimeException
