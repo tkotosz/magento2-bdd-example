@@ -20,9 +20,6 @@ class StockIndicatorExportContext implements Context
     /** @var Product|null */
     private $product = null;
 
-    /** @var int */
-    private $expectedNumberOfCatalogEntries = 0;
-
     /** @var StockIndicatorExportDocument|null */
     private $stockIndicatorExportDocument = null;
 
@@ -67,7 +64,40 @@ class StockIndicatorExportContext implements Context
         $product = Product::fromSku($sku);
         $this->catalog[$product->sku()->toString()] = $product;
         $this->product = $product;
-        $this->expectedNumberOfCatalogEntries++;
+    }
+
+    /**
+     * @Given there is a product in the catalog that has a stock level of :stock
+     */
+    public function thereIsAProductInTheCatalogThatHasAStockLevelOf(Stock $stock)
+    {
+        $product = Product::fromSkuAndStock(Sku::fromString(uniqid()), $stock);
+        $this->catalog[$product->sku()->toString()] = $product;
+        $this->product = $product;
+    }
+
+    /**
+     * @Given the product with sku :sku does not exists in the catalog
+     */
+    public function theProductWithSkuDoesNotExistsInTheCatalog(Sku $sku)
+    {
+        unset($this->catalog[$sku->toString()]);
+    }
+
+    /**
+     * @Given there are no other products in the catalog
+     */
+    public function thereAreNoOtherProductsInTheCatalog()
+    {
+        // no-op
+    }
+
+    /**
+     * @Given the stock indicator export document has been generated for this product
+     */
+    public function theStockIndicatorExportDocumentHasBeenGeneratedForThisProduct()
+    {
+        $this->theUserRunsTheStockIndicatorExportFor($this->product->sku());
     }
 
     /**
@@ -80,6 +110,88 @@ class StockIndicatorExportContext implements Context
             StockIndicator::fromProductStock($this->product->stock())
         );
         $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries([$entry]);
+    }
+
+    /**
+     * @When the user runs the stock indicator export for :sku
+     */
+    public function theUserRunsTheStockIndicatorExportFor(Sku $sku)
+    {
+        $product = $this->catalog[$sku->toString()] ?? null;
+
+        if ($product === null) {
+            $this->exportException = ProductNotFoundException::fromSku($sku);
+            return;
+        }
+
+        $entry = DocumentEntry::fromSkuAndStockIndicator(
+            $product->sku(),
+            StockIndicator::fromProductStock($product->stock())
+        );
+        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries([$entry]);
+    }
+
+    /**
+     * @When the user checks the stock indicator for this product in the document
+     */
+    public function theUserChecksTheStockIndicatorForThisProductInTheDocument()
+    {
+        $this->inspectedStockIndicator = null;
+
+        foreach ($this->stockIndicatorExportDocument as $entry) {
+            if ($entry->sku()->equals($this->product->sku())) {
+                $this->inspectedStockIndicator = $entry->stockIndicator();
+                break;
+            }
+        }
+    }
+
+    /**
+     * @When the user runs the stock indicator export for :firstSku and :secondSku
+     */
+    public function theUserRunsTheStockIndicatorExportForAnd(Sku $firstSku, Sku $secondSku)
+    {
+        $firstProduct = $this->catalog[$firstSku->toString()] ?? null;
+        $secondProduct = $this->catalog[$secondSku->toString()] ?? null;
+
+        if ($firstProduct === null) {
+            $this->exportException = ProductNotFoundException::fromSku($firstSku);
+            return;
+        }
+
+        if ($secondProduct === null) {
+            $this->exportException = ProductNotFoundException::fromSku($secondSku);
+            return;
+        }
+
+        $entries = [];
+
+        /** @var Product $product */
+        foreach ([$firstProduct, $secondProduct] as $product) {
+            $entries[] = DocumentEntry::fromSkuAndStockIndicator(
+                $product->sku(),
+                StockIndicator::fromProductStock($product->stock())
+            );
+        }
+
+        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries($entries);
+    }
+
+    /**
+     * @When the user runs the stock indicator export for the complete catalog
+     */
+    public function theUserRunsTheStockIndicatorExportForTheCompleteProduct()
+    {
+        $entries = [];
+
+        foreach ($this->catalog as $product) {
+            $entries[] = DocumentEntry::fromSkuAndStockIndicator(
+                $product->sku(),
+                StockIndicator::fromProductStock($product->stock())
+            );
+        }
+
+        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries($entries);
     }
 
     /**
@@ -117,33 +229,6 @@ class StockIndicatorExportContext implements Context
     }
 
     /**
-     * @Given the product with sku :sku does not exists in the catalog
-     */
-    public function theProductWithSkuDoesNotExistsInTheCatalog(Sku $sku)
-    {
-        unset($this->catalog[$sku->toString()]);
-    }
-
-    /**
-     * @When the user runs the stock indicator export for :sku
-     */
-    public function theUserRunsTheStockIndicatorExportFor(Sku $sku)
-    {
-        $product = $this->catalog[$sku->toString()] ?? null;
-
-        if ($product === null) {
-            $this->exportException = ProductNotFoundException::fromSku($sku);
-            return;
-        }
-
-        $entry = DocumentEntry::fromSkuAndStockIndicator(
-            $product->sku(),
-            StockIndicator::fromProductStock($product->stock())
-        );
-        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries([$entry]);
-    }
-
-    /**
      * @Then a :errorMessage error is shown
      */
     public function aErrorIsShown(string $errorMessage)
@@ -161,100 +246,10 @@ class StockIndicatorExportContext implements Context
     }
 
     /**
-     * @Given there is a product in the catalog that has a stock level of :stock
-     */
-    public function thereIsAProductInTheCatalogThatHasAStockLevelOf(Stock $stock)
-    {
-        $product = Product::fromSkuAndStock(Sku::fromString(uniqid()), $stock);
-        $this->catalog[$product->sku()->toString()] = $product;
-        $this->product = $product;
-        $this->expectedNumberOfCatalogEntries++;
-    }
-
-    /**
-     * @Given the stock indicator export document has been generated for this product
-     */
-    public function theStockIndicatorExportDocumentHasBeenGeneratedForThisProduct()
-    {
-        $this->theUserRunsTheStockIndicatorExportFor($this->product->sku());
-    }
-
-    /**
-     * @When the user checks the stock indicator for this product in the document
-     */
-    public function theUserChecksTheStockIndicatorForThisProductInTheDocument()
-    {
-        $this->inspectedStockIndicator = null;
-
-        foreach ($this->stockIndicatorExportDocument as $entry) {
-            if ($entry->sku()->equals($this->product->sku())) {
-                $this->inspectedStockIndicator = $entry->stockIndicator();
-                break;
-            }
-        }
-    }
-
-    /**
      * @Then the user sees a :stockIndicator stock indicator
      */
     public function theUserSeesAStockIndicator(StockIndicator $stockIndicator)
     {
         Assert::assertEquals($stockIndicator, $this->inspectedStockIndicator);
-    }
-
-    /**
-     * @When the user runs the stock indicator export for :firstSku and :secondSku
-     */
-    public function theUserRunsTheStockIndicatorExportForAnd(Sku $firstSku, Sku $secondSku)
-    {
-        $firstProduct = $this->catalog[$firstSku->toString()] ?? null;
-        $secondProduct = $this->catalog[$secondSku->toString()] ?? null;
-
-        if ($firstProduct === null) {
-            $this->exportException = ProductNotFoundException::fromSku($firstSku);
-            return;
-        }
-
-        if ($secondProduct === null) {
-            $this->exportException = ProductNotFoundException::fromSku($secondSku);
-            return;
-        }
-
-        $entries = [];
-
-        /** @var Product $product */
-        foreach ([$firstProduct, $secondProduct] as $product) {
-            $entries[] = DocumentEntry::fromSkuAndStockIndicator(
-                $product->sku(),
-                StockIndicator::fromProductStock($product->stock())
-            );
-        }
-
-        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries($entries);
-    }
-
-    /**
-     * @Given there are no other products in the catalog
-     */
-    public function thereAreNoOtherProductsInTheCatalog()
-    {
-        Assert::assertCount($this->expectedNumberOfCatalogEntries, $this->catalog);
-    }
-
-    /**
-     * @When the user runs the stock indicator export for the complete catalog
-     */
-    public function theUserRunsTheStockIndicatorExportForTheCompleteProduct()
-    {
-        $entries = [];
-
-        foreach ($this->catalog as $product) {
-            $entries[] = DocumentEntry::fromSkuAndStockIndicator(
-                $product->sku(),
-                StockIndicator::fromProductStock($product->stock())
-            );
-        }
-
-        $this->stockIndicatorExportDocument = StockIndicatorExportDocument::fromEntries($entries);
     }
 }
