@@ -1,3 +1,16 @@
+filter:
+  paths:
+    - 'src/*'
+  dependency_paths:
+    - 'vendor/*'
+  excluded_paths:
+    - 'features/bootstrap/*'
+    - 'dev/*'
+    - 'var/*'
+    - 'lib/*'
+    - 'bin/*'
+    - 'vendor/*'
+
 build:
   environment:
     php:
@@ -25,37 +38,14 @@ build:
           - 'true'
       tests:
         override:
-          - find src/* -type f -name '*.php' -exec php -l {} \; | grep -v "No syntax errors detected" || echo "OK" # PHP Syntax check (lint)
-          - bin/phpcs -p # PHP Code Style check
-          # Scrutinizer Static Analysis
+          - find src/* -type f -name '*.php' -exec php -l {} \; | grep -v "No syntax errors detected" || echo "OK"
+          - bin/phpcs -p
           - php-scrutinizer-run
-          # PHPStan Static Analysis
           - bin/phpstan analyse
-          # Psalm Static Analysis
           - bin/psalm
-          # PHP Mess Detector
           - bin/phpmd ./src text ./phpmd.xml
-    tests:
-      project_setup:
-        before:
-          - 'true'
-      tests:
-        override:
           - bin/behat --no-interaction --no-snippets --stop-on-failure --format=pretty
           - bin/phpspec run
-
-filter:
-  paths:
-    - 'src/*'
-  dependency_paths:
-    - 'vendor/*'
-  excluded_paths:
-    - 'features/bootstrap/*'
-    - 'dev/*'
-    - 'var/*'
-    - 'lib/*'
-    - 'bin/*'
-    - 'vendor/*'
 
 build_failure_conditions:
   - 'elements.rating(< A).new.exists'
