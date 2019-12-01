@@ -26,10 +26,10 @@ build:
       - test -f bin/composer.phar || (wget "https://getcomposer.org/composer.phar" -O bin/composer.phar && chmod +x bin/composer.phar)
 
     override:
-      - { command: 'bin/composer.phar install --no-interaction --no-suggest -vv', idle_timeout: 600 }
+      - { command: 'rm -rf ./vendor && bin/composer.phar install --no-interaction --no-suggest -vv', idle_timeout: 600 }
 
   cache:
-    directories: [ vendor/, bin/, ~/.composer/cache ]
+    directories: [ ~/.composer/cache ]
 
   nodes:
     analysis:
