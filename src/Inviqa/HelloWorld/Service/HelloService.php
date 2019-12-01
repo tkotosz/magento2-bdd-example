@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inviqa\HelloWorld\Service;
 
-class HelloService
+final class HelloService
 {
     public function sayHello(): string
     {
