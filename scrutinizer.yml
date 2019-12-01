@@ -25,6 +25,7 @@ build:
           - 'true'
       tests:
         override:
+          - find src/* -type f -name '*.php' -exec php -l {} \; | grep -v "No syntax errors detected" || echo "OK"
           - php-scrutinizer-run
           - bin/phpcs -p
           - bin/phpstan analyse
