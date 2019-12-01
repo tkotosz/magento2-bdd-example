@@ -1,35 +1,7 @@
-checks:
-  php: true
-
-tools:
-  external_code_coverage: false
-  php_code_coverage: false
-  php_code_sniffer:
-    config: { standard: 'PSR2' }
-  php_changetracking: false
-  php_sim: false
-  php_mess_detector: true
-  php_pdepend: true
-  php_analyzer: false
-  sensiolabs_security_checker: true
-
-filter:
-  paths:
-    - 'src/*'
-  excluded_paths:
-    - 'features/bootstrap/*'
-    - 'dev/*'
-    - 'var/*'
-    - 'lib/*'
-    - 'bin/*'
-    - 'vendor/*'
-
 build:
   environment:
     php:
-      version: '7.1.6'
-      ini:
-        'always_populate_raw_post_data': '-1'
+      version: '7.2'
 
   nodes:
     analysis:
@@ -44,8 +16,19 @@ build:
   cache:
     directories: [ vendor/, bin/, ~/.composer/cache ]
 
+filter:
+  paths:
+    - 'src/*'
+  excluded_paths:
+    - 'features/bootstrap/*'
+    - 'dev/*'
+    - 'var/*'
+    - 'lib/*'
+    - 'bin/*'
+    - 'vendor/*'
+
 build_failure_conditions:
-  - 'elements.rating(<= B).new.exists'
+  - 'elements.rating(< A).new.exists'
   - 'issues.label("coding-style").new.exists'
   - 'issues.new.exists'
   - 'project.metric("scrutinizer.quality", < 9.00)'
