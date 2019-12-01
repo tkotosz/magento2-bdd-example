@@ -2,9 +2,27 @@ build:
   environment:
     php:
       version: '7.2'
+      ini:
+        'always_populate_raw_post_data': '-1'
+
+  dependencies:
+    before:
+      - sed -i 's/zend_extension_ts=xdebug.so/;zend_extension_ts=xdebug.so/' ~/.phpenv/versions/$(phpenv global)/etc/php.ini
+      - composer global require "hirak/prestissimo:^0.3"
+      - mkdir -p bin
+      - test -f bin/composer.phar || (wget "https://getcomposer.org/composer.phar" -O bin/composer.phar && chmod +x bin/composer.phar)
+
+    override:
+      - { command: 'bin/composer.phar install --no-interaction --no-suggest -vv', idle_timeout: 600 }
+
+  cache:
+    directories: [ vendor/, bin/, ~/.composer/cache ]
 
   nodes:
     analysis:
+      project_setup:
+        override:
+          - 'true'
       tests:
         override:
           - php-scrutinizer-run
@@ -12,19 +30,20 @@ build:
           - bin/phpstan analyse
           - bin/psalm
           - bin/phpmd ./src text ./phpmd.xml
+    tests:
+      project_setup:
+        before:
+          - 'true'
+      tests:
+        override:
           - bin/behat --no-interaction --no-snippets --stop-on-failure --format=pretty
           - bin/phpspec run
-
-      dependencies:
-        override:
-          - { command: 'composer install --no-interaction', idle_timeout: 600 }
-
-  cache:
-    directories: [ vendor/, bin/, ~/.composer/cache ]
 
 filter:
   paths:
     - 'src/*'
+  dependency_paths:
+    - 'vendor/*'
   excluded_paths:
     - 'features/bootstrap/*'
     - 'dev/*'
