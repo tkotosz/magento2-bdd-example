@@ -8,6 +8,12 @@ build:
       tests:
         override:
           - php-scrutinizer-run
+          - bin/phpcs -p
+          - bin/phpstan analyse
+          - bin/psalm
+          - bin/phpmd ./src text ./phpmd.xml
+          - bin/behat --no-interaction --no-snippets --stop-on-failure --format=pretty
+          - bin/phpspec run
 
       dependencies:
         override:

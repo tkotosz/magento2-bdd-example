@@ -72,7 +72,7 @@
             "@test-acceptance"
         ],
         "test-quality": [
-            "phpcs -v",
+            "phpcs -p",
             "phpstan analyse",
             "psalm",
             "phpmd ./src text ./phpmd.xml"
