@@ -23,6 +23,11 @@ final class SkuList implements IteratorAggregate
         return new self($skus);
     }
 
+    /**
+     * @param string[] $skusAsStrings
+     *
+     * @return SkuList
+     */
     public static function fromStrings(array $skusAsStrings): SkuList
     {
         $skus = [];

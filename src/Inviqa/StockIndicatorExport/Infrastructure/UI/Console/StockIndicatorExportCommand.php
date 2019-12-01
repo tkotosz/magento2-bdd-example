@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inviqa\StockIndicatorExport\Infrastructure\UI\Console;
 
 use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
@@ -22,7 +24,7 @@ class StockIndicatorExportCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('inviqa:stock-indicator:export')
@@ -32,7 +34,7 @@ class StockIndicatorExportCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $skuList = (array) $input->getArgument('skus');
 

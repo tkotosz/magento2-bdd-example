@@ -6,5 +6,8 @@ parameters:
        - src
     classesAllowedToBeExtended:
        - RuntimeException
+       - Symfony\Component\Console\Command\Command
+    classesNotRequiredToBeAbstractOrFinal:
+    	- Inviqa\StockIndicatorExport\Infrastructure\UI\Console\StockIndicatorExportCommand
     excludes_analyse:
        - */src/**/registration.php
