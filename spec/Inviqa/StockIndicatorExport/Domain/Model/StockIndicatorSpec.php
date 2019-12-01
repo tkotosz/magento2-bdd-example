@@ -40,7 +40,6 @@ final class StockIndicatorSpec extends ObjectBehavior
         $this->beConstructedThrough('fromString', ['BLUE']);
 
         $this->shouldThrow(InvalidArgumentException::class)->duringInstantiation();
-        $this->shouldHaveType(StockIndicator::class);
     }
 
     function it_can_be_created_as_red_indicator()

@@ -25,6 +25,11 @@ final class StockIndicatorExportDocumentSpec extends ObjectBehavior
 
     function it_is_iterable()
     {
+        $this->beConstructedThrough(
+            'fromEntries',
+            [[DocumentEntry::fromSkuAndStockIndicator(Sku::fromString('foo'), StockIndicator::red())]]
+        );
+
         $this->shouldImplement(IteratorAggregate::class);
     }
 }

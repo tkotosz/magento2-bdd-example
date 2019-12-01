@@ -21,6 +21,5 @@ final class StockSpec extends ObjectBehavior
         $this->beConstructedThrough('fromInt', [-1]);
 
         $this->shouldThrow(InvalidArgumentException::class)->duringInstantiation();
-        $this->shouldHaveType(Stock::class);
     }
 }
