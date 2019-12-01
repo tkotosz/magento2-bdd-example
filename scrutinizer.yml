@@ -25,10 +25,8 @@ build:
           - 'true'
       tests:
         override:
-          # PHP Syntax check (lint)
-          - find src/* -type f -name '*.php' -exec php -l {} \; | grep -v "No syntax errors detected" || echo "OK"
-          # PHP Code Style check
-          - bin/phpcs -p
+          - find src/* -type f -name '*.php' -exec php -l {} \; | grep -v "No syntax errors detected" || echo "OK" # PHP Syntax check (lint)
+          - bin/phpcs -p # PHP Code Style check
           # Scrutinizer Static Analysis
           - php-scrutinizer-run
           # PHPStan Static Analysis
