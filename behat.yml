@@ -2,5 +2,6 @@ default:
   suites:
     domain:
       contexts:
+        - FeatureContext
         - Inviqa\Acceptance\Context\StockIndicatorExport\Domain\ValueTransformationsContext
         - Inviqa\Acceptance\Context\StockIndicatorExport\Domain\StockIndicatorExportContext
