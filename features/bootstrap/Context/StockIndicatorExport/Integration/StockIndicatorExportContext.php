@@ -13,6 +13,8 @@ use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument\DocumentEntry;
 use Inviqa\StockIndicatorExport\Domain\Service\StockIndicatorExporter;
 use Magento\Catalog\Api\ProductRepositoryInterface as MagentoProductRepository;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\NoSuchEntityException;
 use PHPUnit\Framework\Assert;
 use Magento\Catalog\Model\ProductFactory as MagentoProductFactory;
@@ -44,14 +46,29 @@ class StockIndicatorExportContext implements Context
     /** @var MagentoProductFactory */
     private $magentoProductFactory;
 
+    /** @var ResourceConnection */
+    private $resourceConnection;
+
     public function __construct(
         StockIndicatorExporter $stockIndicatorExporter,
         MagentoProductRepository $magentoProductRepository,
-        MagentoProductFactory $magentoProductFactory
+        MagentoProductFactory $magentoProductFactory,
+        ResourceConnection $resourceConnection
     ) {
         $this->stockIndicatorExporter = $stockIndicatorExporter;
         $this->magentoProductRepository = $magentoProductRepository;
         $this->magentoProductFactory = $magentoProductFactory;
+        $this->resourceConnection = $resourceConnection;
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function setUp()
+    {
+        $this->resourceConnection->getConnection()->delete('catalog_product_entity');
+        $this->resourceConnection->getConnection()->delete('url_rewrite');
+        $this->resourceConnection->getConnection()->delete('inventory_source_item');
     }
 
     /**
@@ -97,6 +114,8 @@ class StockIndicatorExportContext implements Context
     {
         try {
             $this->magentoProductRepository->deleteById($sku->toString());
+            // it seems magento doesn't delete the stock when the product is removed (missing foreign key)
+            $this->resourceConnection->getConnection()->delete('inventory_source_item', ['sku=?' => $sku->toString()]);
         } catch (NoSuchEntityException $e) {
             // no-op already deleted
         }
@@ -107,7 +126,7 @@ class StockIndicatorExportContext implements Context
      */
     public function thereAreNoOtherProductsInTheCatalog()
     {
-        // TODO
+        // no-op
     }
 
     /**

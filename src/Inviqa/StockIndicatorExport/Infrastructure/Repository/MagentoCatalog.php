@@ -12,6 +12,7 @@ use Inviqa\StockIndicatorExport\Domain\Repository\Catalog;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 
 class MagentoCatalog implements Catalog
 {
@@ -21,12 +22,17 @@ class MagentoCatalog implements Catalog
     /** @var SearchCriteriaBuilder */
     private $searchCriteriaBuilder;
 
+    /** @var SourceItemRepositoryInterface */
+    private $sourceItemRepository;
+
     public function __construct(
         ProductRepositoryInterface $magentoProductRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        SourceItemRepositoryInterface $sourceItemRepository
     ) {
         $this->magentoProductRepository = $magentoProductRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->sourceItemRepository = $sourceItemRepository;
     }
 
     /**
@@ -34,15 +40,19 @@ class MagentoCatalog implements Catalog
      */
     public function findBySku(Sku $sku): Product
     {
-        try {
-            $magentoProduct = $this->magentoProductRepository->get($sku->toString());
-        } catch (NoSuchEntityException $e) {
+        $this->searchCriteriaBuilder->addFilter('sku', $sku->toString(), 'eq');
+        $stockItemSearchResult = $this->sourceItemRepository->getList($this->searchCriteriaBuilder->create());
+
+        if ($stockItemSearchResult->getTotalCount() === 0) {
             throw ProductNotFoundException::fromSku($sku);
         }
 
+        $items = $stockItemSearchResult->getItems();
+        $stockItem = array_shift($items);
+
         return Product::fromSkuAndStock(
-            Sku::fromString($magentoProduct->getSku()),
-            Stock::fromInt((int) $magentoProduct->getExtensionAttributes()->getStockItem()->getQty())
+            Sku::fromString($stockItem->getSku()),
+            Stock::fromInt((int) $stockItem->getQuantity())
         );
     }
 
@@ -52,10 +62,26 @@ class MagentoCatalog implements Catalog
     public function findBySkuList(SkuList $skuList): ProductList
     {
         $products = [];
+        $skusRequested = $skuList->toStrings();
+        $skusFound = [];
 
-        // TODO
-        foreach ($skuList as $sku) {
-            $products[] = $this->findBySku($sku);
+        $this->searchCriteriaBuilder->addFilter('sku', $skusRequested, 'in');
+        $stockItemSearchResult = $this->sourceItemRepository->getList($this->searchCriteriaBuilder->create());
+
+        foreach ($stockItemSearchResult->getItems() as $stockItem) {
+            $skusFound[] = $stockItem->getSku();
+            $products[] =  Product::fromSkuAndStock(
+                Sku::fromString($stockItem->getSku()),
+                Stock::fromInt((int) $stockItem->getQuantity())
+            );
+        }
+
+        // interface says we need to throw an exception when a product is missing
+        // probably wrong requirement or should not be handled here
+        // or we should throw an exception with all missing sku - TBC
+        $missingSkus = array_diff($skusRequested, $skusFound);
+        if ($missingSkus !== []) {
+            throw ProductNotFoundException::fromSku(Sku::fromString(array_shift($missingSkus)));
         }
 
         return ProductList::fromProducts($products);
@@ -68,21 +94,12 @@ class MagentoCatalog implements Catalog
     {
         $products = [];
 
-        // TODO
-        $this->searchCriteriaBuilder->addFilter('sku', ['INVIQA-001', 'INVIQA-002', 'INVIQA-003'], 'in');
+        $stockItemSearchResult = $this->sourceItemRepository->getList($this->searchCriteriaBuilder->create());
 
-        $magentoProducts = $this->magentoProductRepository->getList($this->searchCriteriaBuilder->create());
-
-        foreach ($magentoProducts->getItems() as $magentoProduct) {
-
-            // REMOVE THIS BEGIN !!!
-            $magentoProduct = $this->magentoProductRepository->get($magentoProduct->getSku()); // reload to get stock :D
-            // REMOVE THIS END !!!
-
-            $stockItem = $magentoProduct->getExtensionAttributes()->getStockItem();
+        foreach ($stockItemSearchResult->getItems() as $stockItem) {
             $products[] =  Product::fromSkuAndStock(
-                Sku::fromString($magentoProduct->getSku()),
-                Stock::fromInt((int) $magentoProduct->getExtensionAttributes()->getStockItem()->getQty())
+                Sku::fromString($stockItem->getSku()),
+                Stock::fromInt((int) $stockItem->getQuantity())
             );
         }
 

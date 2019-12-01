@@ -34,6 +34,13 @@ final class SkuList implements IteratorAggregate
         return false;
     }
 
+    public function toStrings(): array
+    {
+        return array_map(function (Sku $sku) {
+            return $sku->toString();
+        }, $this->skus);
+    }
+
     /**
      * @return Traversable|Sku[]
      */
