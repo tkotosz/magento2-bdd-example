@@ -3,6 +3,7 @@
     "type": "project",
     "license": "proprietary",
     "require": {
+        "php": ">=7.2",
         "magento/product-community-edition": "2.3.3",
         "composer/composer": "@alpha"
     },
@@ -71,7 +72,7 @@
             "@test-acceptance"
         ],
         "test-quality": [
-            "phpcs -v",
+            "phpcs -p",
             "phpstan analyse",
             "psalm",
             "phpmd ./src text ./phpmd.xml"
