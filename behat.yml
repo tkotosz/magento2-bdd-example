@@ -25,5 +25,16 @@ default:
       magento:
         area: 'adminhtml'
 
+    endtoend:
+      filters:
+        tags: "@endtoend"
+      autowire: true
+      contexts:
+        - Inviqa\Acceptance\Context\StockIndicatorExport\Domain\ValueTransformationsContext
+        - Inviqa\Acceptance\Context\StockIndicatorExport\EndToEnd\StockIndicatorExportContext
+      services: '@bex.magento2_extension.service_container'
+      magento:
+        area: 'adminhtml'
+
   extensions:
     Bex\Behat\Magento2Extension: ~

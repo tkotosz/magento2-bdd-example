@@ -23,6 +23,17 @@ final class SkuList implements IteratorAggregate
         return new self($skus);
     }
 
+    public static function fromStrings(array $skusAsStrings): SkuList
+    {
+        $skus = [];
+
+        foreach ($skusAsStrings as $sku) {
+            $skus[] = Sku::fromString($sku);
+        }
+
+        return self::fromSkus($skus);
+    }
+
     public function has(Sku $otherSku): bool
     {
         foreach ($this->skus as $sku) {
