@@ -60,8 +60,6 @@
 
     <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility" />
 
-    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses" />
-
     <arg name="extensions" value="php" />
     <arg name="report" value="full" />
     <arg value="s" />
