@@ -60,6 +60,12 @@
 
     <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility" />
 
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
+        <properties>
+            <property name="searchAnnotations" value="true" />
+        </properties>
+    </rule>
+
     <arg name="extensions" value="php" />
     <arg name="report" value="full" />
     <arg value="s" />
