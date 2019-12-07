@@ -6,8 +6,13 @@ parameters:
        - src
     classesAllowedToBeExtended:
        - RuntimeException
+       - Symfony\Component\Console\Command\Command
+    classesNotRequiredToBeAbstractOrFinal:
+       - Inviqa\StockIndicatorExport\Infrastructure\UI\Console\StockIndicatorExportCommand
     exceptionRules:
        uncheckedExceptions:
           - LogicException
     excludes_analyse:
        - */src/**/registration.php
+    ignoreErrors:
+    	- '/Unused @throws Symfony\\Component\\Console\\Exception\\LogicException annotation/'

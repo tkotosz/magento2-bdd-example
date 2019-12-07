@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Inviqa\StockIndicatorExport\Infrastructure\Repository;
 
-use InvalidArgumentException;
 use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Product;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\ProductList;
@@ -16,7 +15,6 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
-use Psr\Log\LoggerInterface;
 
 final class MagentoApiBasedProductRepository implements ProductRepository
 {
@@ -29,19 +27,14 @@ final class MagentoApiBasedProductRepository implements ProductRepository
     /** @var SourceItemRepositoryInterface */
     private $sourceItemRepository;
 
-    /** @var LoggerInterface */
-    private $logger;
-
     public function __construct(
         ProductRepositoryInterface $magentoProductRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        SourceItemRepositoryInterface $sourceItemRepository,
-        LoggerInterface $logger
+        SourceItemRepositoryInterface $sourceItemRepository
     ) {
         $this->magentoProductRepository = $magentoProductRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->sourceItemRepository = $sourceItemRepository;
-        $this->logger = $logger;
     }
 
     public function findBySku(ProductSku $productSku): Product
@@ -57,12 +50,7 @@ final class MagentoApiBasedProductRepository implements ProductRepository
             throw ProductNotFoundException::fromSku($productSku);
         }
 
-        try {
-            return $this->transformToProduct($stockItem);
-        } catch (InvalidArgumentException $e) {
-            $this->logTransformationError($stockItem, $e);
-            throw ProductNotFoundException::fromSku($productSku);
-        }
+        return $this->transformToProduct($stockItem);
     }
 
     public function findBySkuList(ProductSkuList $productSkuList): ProductList
@@ -73,11 +61,7 @@ final class MagentoApiBasedProductRepository implements ProductRepository
         $stockItemSearchResult = $this->sourceItemRepository->getList($this->searchCriteriaBuilder->create());
 
         foreach ($stockItemSearchResult->getItems() as $stockItem) {
-            try {
-                $products[] = $this->transformToProduct($stockItem);
-            } catch (InvalidArgumentException $e) {
-                $this->logTransformationError($stockItem, $e);
-            }
+            $products[] = $this->transformToProduct($stockItem);
         }
 
         return ProductList::fromProducts($products);
@@ -90,42 +74,17 @@ final class MagentoApiBasedProductRepository implements ProductRepository
         $stockItemSearchResult = $this->sourceItemRepository->getList($this->searchCriteriaBuilder->create());
 
         foreach ($stockItemSearchResult->getItems() as $stockItem) {
-            try {
-                $products[] = $this->transformToProduct($stockItem);
-            } catch (InvalidArgumentException $e) {
-                $this->logTransformationError($stockItem, $e);
-            }
+            $products[] = $this->transformToProduct($stockItem);
         }
 
         return ProductList::fromProducts($products);
     }
 
-    /**
-     * @param SourceItemInterface $stockItem
-     *
-     * @return Product
-     *
-     * @throws InvalidArgumentException
-     */
     private function transformToProduct(SourceItemInterface $stockItem): Product
     {
         return Product::fromSkuAndStock(
             ProductSku::fromString($stockItem->getSku() ?? ''),
             ProductStock::fromInt((int) ($stockItem->getQuantity() ?? 0))
-        );
-    }
-
-    private function logTransformationError(SourceItemInterface $stockItem, InvalidArgumentException $exception): void
-    {
-        $this->logger->notice(
-            'An error occurred during stock item to product transformation',
-            [
-                'exception' => $exception,
-                'stock_item_data' => [
-                    'sku' => $stockItem->getSku(),
-                    'quantity' => $stockItem->getQuantity()
-                ]
-            ]
         );
     }
 }
