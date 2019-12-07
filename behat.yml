@@ -13,5 +13,11 @@ default:
       magento:
         area: 'stock_indicator_export_test'
 
+    integration:
+      autowire: true
+      contexts:
+        - Inviqa\Acceptance\Context\StockIndicatorExport\TransformationsContext
+        - Inviqa\Acceptance\Context\StockIndicatorExport\Integration\StockIndicatorExportContext
+      services: '@bex.magento2_extension.service_container'
   extensions:
     Bex\Behat\Magento2Extension: ~
