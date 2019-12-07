@@ -4,3 +4,8 @@ parameters:
     level: max
     paths:
        - src
+    classesAllowedToBeExtended:
+       - RuntimeException
+    exceptionRules:
+       uncheckedExceptions:
+          - LogicException

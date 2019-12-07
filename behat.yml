@@ -1,0 +1,6 @@
+default:
+  suites:
+    domain:
+      contexts:
+        - Inviqa\Acceptance\Context\StockIndicatorExport\TransformationsContext
+        - Inviqa\Acceptance\Context\StockIndicatorExport\Domain\StockIndicatorExportContext
