@@ -219,6 +219,7 @@ return [
         'Amazon_Login' => 1,
         'Amazon_Payment' => 1,
         'Dotdigitalgroup_Email' => 1,
+        'Inviqa_StockIndicatorExport' => 1,
         'Klarna_Core' => 1,
         'Klarna_Ordermanagement' => 1,
         'Klarna_Kp' => 1,

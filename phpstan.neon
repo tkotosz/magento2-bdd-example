@@ -9,3 +9,5 @@ parameters:
     exceptionRules:
        uncheckedExceptions:
           - LogicException
+    excludes_analyse:
+       - */src/**/registration.php
