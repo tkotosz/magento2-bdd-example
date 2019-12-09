@@ -47,7 +47,7 @@ build:
           - bin/magento deploy:mode:set production
       tests:
         override:
-          - find src/* -type f -name '*.php' -exec php -l {} \; | grep -v "No syntax errors detected" || echo "OK"
+          - find src/ -type f -name '*.phtml' -o -name '*.php' | xargs -n 1 -P 8 -i php -l {} | grep -v "No syntax errors detected" || echo "OK"
           - bin/phpcs -p
           - php-scrutinizer-run
           - bin/phpstan analyse
