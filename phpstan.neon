@@ -1,5 +1,5 @@
 includes:
-- vendor/inviqa/phpstan-magento2/extension.neon
+	- vendor/inviqa/phpstan-magento2/extension.neon
 parameters:
 	level: max
 	paths:
