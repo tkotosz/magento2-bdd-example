@@ -1,15 +1,17 @@
 {
     "name": "inviqa/magento2-bdd-example",
     "type": "project",
+    "description": "Magento 2 BDD Example",
     "license": "proprietary",
     "require": {
         "php": ">=7.2",
-        "magento/product-community-edition": "2.3.4",
-        "composer/composer": "@alpha"
+        "composer/composer": "@alpha",
+        "magento/product-community-edition": "2.3.4"
     },
     "require-dev": {
         "behat/behat": "^3.5",
         "bex/behat-magento2-extension": "^2.0",
+        "ergebnis/composer-normalize": "^2.3",
         "inviqa/phpstan-magento2": "^0.1",
         "localheinz/phpstan-rules": "dev-master",
         "nagno/phpspec-bootstrap-magento2": "^3.1",
@@ -24,6 +26,13 @@
         "slevomat/coding-standard": "^6.0",
         "squizlabs/php_codesniffer": "^3.5",
         "vimeo/psalm": "^3.7"
+    },
+    "config": {
+        "bin-dir": "bin",
+        "sort-packages": true
+    },
+    "extra": {
+        "magento-force": "override"
     },
     "autoload": {
         "psr-4": {
@@ -63,14 +72,17 @@
             "url": "git@github.com:tkotosz/phpspec-bootstrap-magento2.git"
         }
     ],
-    "extra": {
-        "magento-force": "override"
-    },
     "scripts": {
+        "fix": [
+            "phpcbf -p"
+        ],
         "test": [
             "@test-quality",
             "@test-unit",
             "@test-acceptance"
+        ],
+        "test-acceptance": [
+            "behat"
         ],
         "test-quality": [
             "phpcs -p",
@@ -80,13 +92,6 @@
         ],
         "test-unit": [
             "phpspec run"
-        ],
-        "test-acceptance": [
-            "behat"
         ]
-    },
-    "config": {
-        "bin-dir": "bin",
-        "sort-packages": true
     }
 }
