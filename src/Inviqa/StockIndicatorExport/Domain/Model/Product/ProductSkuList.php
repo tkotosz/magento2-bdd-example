@@ -8,9 +8,7 @@ use ArrayIterator;
 use Iterator;
 use IteratorAggregate;
 
-/**
- * @implements IteratorAggregate<ProductSku>
- */
+/** @implements IteratorAggregate<ProductSku> */
 final class ProductSkuList implements IteratorAggregate
 {
     /** @var ProductSku[] */
@@ -37,17 +35,13 @@ final class ProductSkuList implements IteratorAggregate
         return false;
     }
 
-    /**
-     * @return Iterator|ProductSku[]
-     */
+    /** @return Iterator|ProductSku[] */
     public function getIterator(): Iterator
     {
         return new ArrayIterator($this->skus);
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function toStringArray(): array
     {
         $skus = [];
@@ -59,9 +53,7 @@ final class ProductSkuList implements IteratorAggregate
         return $skus;
     }
 
-    /**
-     * @param ProductSku[] $skus
-     */
+    /** @param ProductSku[] $skus */
     private function __construct(array $skus)
     {
         $this->skus = $skus;

@@ -9,9 +9,7 @@ use Inviqa\StockIndicatorExport\Domain\Model\Product\ProductSku;
 use Iterator;
 use IteratorAggregate;
 
-/**
- * @implements IteratorAggregate<StockIndicatorExportDocumentEntry>
- */
+/** @implements IteratorAggregate<StockIndicatorExportDocumentEntry> */
 final class StockIndicatorExportDocument implements IteratorAggregate
 {
     /** @var StockIndicatorExportDocumentId */
@@ -43,9 +41,7 @@ final class StockIndicatorExportDocument implements IteratorAggregate
         return $this->documentId;
     }
 
-    /**
-     * @return StockIndicatorExportDocumentEntry[]
-     */
+    /** @return StockIndicatorExportDocumentEntry[] */
     public function entries(): array
     {
         return $this->entries;
@@ -67,9 +63,7 @@ final class StockIndicatorExportDocument implements IteratorAggregate
         return false;
     }
 
-    /**
-     * @return Iterator|StockIndicatorExportDocumentEntry[]
-     */
+    /** @return Iterator|StockIndicatorExportDocumentEntry[] */
     public function getIterator(): Iterator
     {
         return new ArrayIterator($this->entries);

@@ -1,18 +1,19 @@
 includes:
-    - vendor/inviqa/phpstan-magento2/extension.neon
+- vendor/inviqa/phpstan-magento2/extension.neon
 parameters:
-    level: max
-    paths:
-       - src
-    classesAllowedToBeExtended:
-       - RuntimeException
-       - Symfony\Component\Console\Command\Command
-    classesNotRequiredToBeAbstractOrFinal:
-       - Inviqa\StockIndicatorExport\Infrastructure\UI\Console\StockIndicatorExportCommand
-    exceptionRules:
-       uncheckedExceptions:
-          - LogicException
-    excludes_analyse:
-       - */src/**/registration.php
-    ignoreErrors:
-    	- '/Unused @throws Symfony\\Component\\Console\\Exception\\LogicException annotation/'
+	level: max
+	paths:
+		- src
+	excludes_analyse:
+		- */src/**/registration.php
+	ignoreErrors:
+		- '/Unused @throws Symfony\\Component\\Console\\Exception\\LogicException annotation/'
+	ergebnis:
+		classesAllowedToBeExtended:
+			- RuntimeException
+			- Symfony\Component\Console\Command\Command
+		classesNotRequiredToBeAbstractOrFinal:
+			- Inviqa\StockIndicatorExport\Infrastructure\UI\Console\StockIndicatorExportCommand
+	exceptionRules:
+		uncheckedExceptions:
+			- LogicException

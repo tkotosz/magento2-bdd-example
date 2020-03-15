@@ -8,9 +8,7 @@ use ArrayIterator;
 use Iterator;
 use IteratorAggregate;
 
-/**
- * @implements IteratorAggregate<Product>
- */
+/** @implements IteratorAggregate<Product> */
 final class ProductList implements IteratorAggregate
 {
     /** @var Product[] */
@@ -26,9 +24,7 @@ final class ProductList implements IteratorAggregate
         return new self($products);
     }
 
-    /**
-     * @return Iterator|Product[]
-     */
+    /** @return Iterator|Product[] */
     public function getIterator(): Iterator
     {
         return new ArrayIterator($this->products);
@@ -45,9 +41,7 @@ final class ProductList implements IteratorAggregate
         return false;
     }
 
-    /**
-     * @param Product[] $products
-     */
+    /** @param Product[] $products */
     private function __construct(array $products)
     {
         $this->products = $products;
