@@ -12,8 +12,8 @@
         "behat/behat": "^3.5",
         "bex/behat-magento2-extension": "^2.0",
         "ergebnis/composer-normalize": "^2.3",
+        "ergebnis/phpstan-rules": "^0.14.4",
         "inviqa/phpstan-magento2": "^0.1",
-        "localheinz/phpstan-rules": "dev-master",
         "nagno/phpspec-bootstrap-magento2": "^3.1",
         "pepakriz/phpstan-exception-rules": "^0.10.0",
         "phpmd/phpmd": "^2.7",
@@ -77,7 +77,7 @@
         ],
         "test-quality": [
             "find src/ pub/ -type f \\( -name '*.phtml' -o -name '*.php' \\) | xargs -n 1 -P 8 -i php -l {} | grep -v 'No syntax errors detected' || echo 'OK'",
-            "phpcs -p -v",
+            "phpcs -p",
             "phpstan analyse",
             "psalm",
             "phpmd ./src text ./phpmd.xml"

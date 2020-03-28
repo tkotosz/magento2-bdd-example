@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c44a5022f6e819b3fdb5eaacaa8149bb",
+    "content-hash": "195cf19ef3b98f7f5fc0ac1bed0d9586",
     "packages": [
         {
             "name": "amzn/amazon-pay-and-login-magento-2-module",
@@ -16355,6 +16355,73 @@
             "time": "2019-12-19T14:42:54+00:00"
         },
         {
+            "name": "ergebnis/phpstan-rules",
+            "version": "0.14.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ergebnis/phpstan-rules.git",
+                "reference": "72eeba43afe81837d67349b3794c2f4157a2640c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ergebnis/phpstan-rules/zipball/72eeba43afe81837d67349b3794c2f4157a2640c",
+                "reference": "72eeba43afe81837d67349b3794c2f4157a2640c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "nikic/php-parser": "^4.2.3",
+                "php": "^7.1",
+                "phpstan/phpstan": "~0.11.15 || ~0.12.0"
+            },
+            "require-dev": {
+                "ergebnis/composer-normalize": "^2.3.0",
+                "ergebnis/license": "~0.1.0",
+                "ergebnis/php-cs-fixer-config": "^2.1.0",
+                "ergebnis/test-util": "~1.0.0",
+                "infection/infection": "~0.13.6",
+                "nette/di": "^3.0.1",
+                "phpstan/phpstan-deprecation-rules": "~0.11.2",
+                "phpstan/phpstan-strict-rules": "~0.11.1",
+                "phpunit/phpunit": "^7.5.20",
+                "psalm/plugin-phpunit": "~0.9.0",
+                "psr/container": "^1.0.0",
+                "vimeo/psalm": "^3.9.5",
+                "zendframework/zend-servicemanager": "^2.0.0"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "rules.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ergebnis\\PHPStan\\Rules\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andreas Möller",
+                    "email": "am@localheinz.com"
+                }
+            ],
+            "description": "Provides additional rules for phpstan/phpstan.",
+            "homepage": "https://github.com/ergebnis/phpstan-rules",
+            "keywords": [
+                "PHPStan",
+                "phpstan-extreme-rules",
+                "phpstan-rules"
+            ],
+            "time": "2020-03-13T20:00:07+00:00"
+        },
+        {
             "name": "felixfbecker/advanced-json-rpc",
             "version": "v3.1.1",
             "source": {
@@ -16517,74 +16584,6 @@
                 "unified diff"
             ],
             "time": "2019-12-17T07:42:37+00:00"
-        },
-        {
-            "name": "localheinz/phpstan-rules",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ergebnis/phpstan-rules.git",
-                "reference": "71368688e8d6792b9763a253d6038d03f02c01d6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/phpstan-rules/zipball/71368688e8d6792b9763a253d6038d03f02c01d6",
-                "reference": "71368688e8d6792b9763a253d6038d03f02c01d6",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "nikic/php-parser": "^4.2.3",
-                "php": "^7.1",
-                "phpstan/phpstan": "~0.11.15 || ~0.12.0"
-            },
-            "require-dev": {
-                "ergebnis/composer-normalize": "^2.3.2",
-                "ergebnis/license": "~0.1.0",
-                "ergebnis/php-cs-fixer-config": "^2.1.0",
-                "ergebnis/test-util": "~1.0.0",
-                "infection/infection": "~0.13.6",
-                "nette/di": "^3.0.1",
-                "phpstan/phpstan-deprecation-rules": "~0.11.2",
-                "phpstan/phpstan-strict-rules": "~0.11.1",
-                "phpunit/phpunit": "^7.5.20",
-                "psalm/plugin-phpunit": "~0.9.0",
-                "psr/container": "^1.0.0",
-                "vimeo/psalm": "^3.10.1",
-                "zendframework/zend-servicemanager": "^2.0.0"
-            },
-            "type": "phpstan-extension",
-            "extra": {
-                "phpstan": {
-                    "includes": [
-                        "rules.neon"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Ergebnis\\PHPStan\\Rules\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Andreas Möller",
-                    "email": "am@localheinz.com"
-                }
-            ],
-            "description": "Provides additional rules for phpstan/phpstan.",
-            "homepage": "https://github.com/ergebnis/phpstan-rules",
-            "keywords": [
-                "PHPStan",
-                "phpstan-extreme-rules",
-                "phpstan-rules"
-            ],
-            "abandoned": "ergebnis/phpstan-rules",
-            "time": "2020-03-24T01:32:55+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -19421,8 +19420,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "composer/composer": 15,
-        "localheinz/phpstan-rules": 20
+        "composer/composer": 15
     },
     "prefer-stable": false,
     "prefer-lowest": false,
