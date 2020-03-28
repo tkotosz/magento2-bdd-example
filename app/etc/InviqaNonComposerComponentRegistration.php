@@ -2,7 +2,6 @@
 
 $pathList[] = realpath(__DIR__ . '/../..') . '/src/*/*/cli_commands.php';
 $pathList[] = realpath(__DIR__ . '/../..') . '/src/*/*/registration.php';
-$pathList[] = realpath(__DIR__ . '/../../') . '/vendor/inviqa/toom-seo-suite/packages/*/*/registration.php';
 
 foreach ($pathList as $path) {
     // Sorting is disabled intentionally for performance improvement

@@ -66,32 +66,30 @@
         {
             "type": "composer",
             "url": "https://repo.magento.com/"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:tkotosz/phpspec-bootstrap-magento2.git"
         }
     ],
+    "minimum-stability": "stable",
     "scripts": {
-        "fix": [
-            "phpcbf -p"
-        ],
         "test": [
             "@test-quality",
             "@test-unit",
             "@test-acceptance"
         ],
-        "test-acceptance": [
-            "behat"
-        ],
         "test-quality": [
-            "phpcs -p",
+            "find src/ pub/ -type f \\( -name '*.phtml' -o -name '*.php' \\) | xargs -n 1 -P 8 -i php -l {} | grep -v 'No syntax errors detected' || echo 'OK'",
+            "phpcs -p -v",
             "phpstan analyse",
             "psalm",
             "phpmd ./src text ./phpmd.xml"
         ],
         "test-unit": [
             "phpspec run"
+        ],
+        "test-acceptance": [
+            "behat"
+        ],
+        "fix-code": [
+            "phpcbf -p"
         ]
     }
 }
