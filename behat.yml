@@ -1,10 +1,13 @@
 default:
   suites:
+    # tests the Domain layer without Magento DI or any infrastructure stuff
+    # this kind of test is not necessarily needed if we have unit tests + application layer tests
     domain:
       contexts:
         - Inviqa\Acceptance\Context\StockIndicatorExport\TransformationsContext
         - Inviqa\Acceptance\Context\StockIndicatorExport\Domain\StockIndicatorExportContext
 
+    # tests the Application layer with Magento DI, but with mock infrastructure layer - see di/test.xml
     application:
       autowire: true
       contexts:
@@ -14,6 +17,8 @@ default:
       magento:
         area: 'test'
 
+    # tests the Application layer with Magento DI and real infrastructure implementation
+    # this kind of test is not needed if we already have application, infrastructure and some end to end tests
     integration:
       autowire: true
       contexts:
@@ -21,6 +26,9 @@ default:
         - Inviqa\Acceptance\Context\StockIndicatorExport\Integration\StockIndicatorExportContext
       services: '@bex.magento2_extension.service_container'
 
+    # tests the application through the UI (CLI in this case) with real infrastructure implementation
+    # this kind of test does not need to run for all scenario if you have full coverage on application layer test level
+    # in this example we run all scenario, but tag-based filtering could be used
     endtoend:
       autowire: true
       contexts:
