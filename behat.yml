@@ -4,6 +4,7 @@ default:
       contexts:
         - Inviqa\Acceptance\Context\StockIndicatorExport\TransformationsContext
         - Inviqa\Acceptance\Context\StockIndicatorExport\Domain\StockIndicatorExportContext
+
     application:
       autowire: true
       contexts:
@@ -11,7 +12,7 @@ default:
         - Inviqa\Acceptance\Context\StockIndicatorExport\Application\StockIndicatorExportContext
       services: '@bex.magento2_extension.service_container'
       magento:
-        area: 'stock_indicator_export_test'
+        area: 'test'
 
     integration:
       autowire: true
@@ -19,6 +20,7 @@ default:
         - Inviqa\Acceptance\Context\StockIndicatorExport\TransformationsContext
         - Inviqa\Acceptance\Context\StockIndicatorExport\Integration\StockIndicatorExportContext
       services: '@bex.magento2_extension.service_container'
+
     endtoend:
       autowire: true
       contexts:

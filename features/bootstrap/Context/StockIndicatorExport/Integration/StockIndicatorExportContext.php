@@ -3,12 +3,12 @@
 namespace Inviqa\Acceptance\Context\StockIndicatorExport\Integration;
 
 use Behat\Behat\Context\Context;
-use Inviqa\StockIndicatorExport\Application\ExportAllStockIndicator\ExportAllStockIndicatorCommand;
-use Inviqa\StockIndicatorExport\Application\ExportAllStockIndicator\ExportAllStockIndicatorCommandHandler;
-use Inviqa\StockIndicatorExport\Application\ExportStockIndicator\ExportStockIndicatorCommand;
-use Inviqa\StockIndicatorExport\Application\ExportStockIndicator\ExportStockIndicatorCommandHandler;
-use Inviqa\StockIndicatorExport\Application\ExportStockIndicatorList\ExportStockIndicatorListCommand;
-use Inviqa\StockIndicatorExport\Application\ExportStockIndicatorList\ExportStockIndicatorListCommandHandler;
+use Inviqa\StockIndicatorExport\Application\Command\ExportAllStockIndicatorCommand;
+use Inviqa\StockIndicatorExport\Application\Command\ExportStockIndicatorCommand;
+use Inviqa\StockIndicatorExport\Application\Command\ExportStockIndicatorListCommand;
+use Inviqa\StockIndicatorExport\Application\CommandHandler\ExportAllStockIndicatorCommandHandler;
+use Inviqa\StockIndicatorExport\Application\CommandHandler\ExportStockIndicatorCommandHandler;
+use Inviqa\StockIndicatorExport\Application\CommandHandler\ExportStockIndicatorListCommandHandler;
 use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Product;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\ProductSku;

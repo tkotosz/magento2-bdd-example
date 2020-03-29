@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Inviqa\StockIndicatorExport\Application\ExportStockIndicator;
+namespace Inviqa\StockIndicatorExport\Application\CommandHandler;
 
-use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
+use Inviqa\StockIndicatorExport\Application\Command\ExportAllStockIndicatorCommand;
 use Inviqa\StockIndicatorExport\Domain\Exception\StockIndicatorExportDocumentSaveFailedException;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument\StockIndicatorExportDocument;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument\StockIndicatorExportDocumentEntry;
 use Inviqa\StockIndicatorExport\Domain\Repository\ProductRepository;
 use Inviqa\StockIndicatorExport\Domain\Repository\StockIndicatorExportDocumentRepository;
 
-final class ExportStockIndicatorCommandHandler
+final class ExportAllStockIndicatorCommandHandler
 {
     /** @var ProductRepository */
     private $productRepository;
@@ -28,19 +28,19 @@ final class ExportStockIndicatorCommandHandler
     }
 
     /**
-     * @param ExportStockIndicatorCommand $command
+     * @param ExportAllStockIndicatorCommand $command
      *
-     * @throws ProductNotFoundException
      * @throws StockIndicatorExportDocumentSaveFailedException
      */
-    public function handle(ExportStockIndicatorCommand $command): void
+    public function handle(ExportAllStockIndicatorCommand $command): void
     {
-        $product = $this->productRepository->findBySku($command->productSku());
+        $productList = $this->productRepository->findAll();
 
-        $document = StockIndicatorExportDocument::fromDocumentIdAndEntries(
-            $command->documentId(),
-            [StockIndicatorExportDocumentEntry::fromProduct($product)]
-        );
+        $document = StockIndicatorExportDocument::fromDocumentId($command->documentId());
+
+        foreach ($productList as $product) {
+            $document->addEntry(StockIndicatorExportDocumentEntry::fromProduct($product));
+        }
 
         $this->stockIndicatorExportDocumentRepository->save($document);
     }

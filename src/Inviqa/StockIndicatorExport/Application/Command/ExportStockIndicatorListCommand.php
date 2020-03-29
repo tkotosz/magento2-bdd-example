@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Inviqa\StockIndicatorExport\Application\ExportStockIndicatorList;
+namespace Inviqa\StockIndicatorExport\Application\Command;
 
 use Inviqa\StockIndicatorExport\Domain\Model\Product\ProductSku;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\ProductSkuList;

@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Inviqa\StockIndicatorExport\Application\ExportStockIndicatorList;
+namespace Inviqa\StockIndicatorExport\Application\CommandHandler;
 
+use Inviqa\StockIndicatorExport\Application\Command\ExportStockIndicatorListCommand;
 use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
 use Inviqa\StockIndicatorExport\Domain\Exception\StockIndicatorExportDocumentSaveFailedException;
 use Inviqa\StockIndicatorExport\Domain\Model\StockIndicatorExportDocument\StockIndicatorExportDocument;

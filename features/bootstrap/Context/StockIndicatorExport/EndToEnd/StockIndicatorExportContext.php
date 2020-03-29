@@ -3,13 +3,6 @@
 namespace Inviqa\Acceptance\Context\StockIndicatorExport\EndToEnd;
 
 use Behat\Behat\Context\Context;
-use Inviqa\StockIndicatorExport\Application\ExportAllStockIndicator\ExportAllStockIndicatorCommand;
-use Inviqa\StockIndicatorExport\Application\ExportAllStockIndicator\ExportAllStockIndicatorCommandHandler;
-use Inviqa\StockIndicatorExport\Application\ExportStockIndicator\ExportStockIndicatorCommand;
-use Inviqa\StockIndicatorExport\Application\ExportStockIndicator\ExportStockIndicatorCommandHandler;
-use Inviqa\StockIndicatorExport\Application\ExportStockIndicatorList\ExportStockIndicatorListCommand;
-use Inviqa\StockIndicatorExport\Application\ExportStockIndicatorList\ExportStockIndicatorListCommandHandler;
-use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\Product;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\ProductSku;
 use Inviqa\StockIndicatorExport\Domain\Model\Product\ProductSkuList;
@@ -26,15 +19,6 @@ use Magento\Catalog\Model\ProductFactory as MagentoProductFactory;
 
 class StockIndicatorExportContext implements Context
 {
-    /** @var ExportStockIndicatorCommandHandler */
-    private $exportStockIndicatorCommandHandler;
-
-    /** @var ExportStockIndicatorListCommandHandler */
-    private $exportStockIndicatorListCommandHandler;
-
-    /** @var ExportAllStockIndicatorCommandHandler */
-    private $exportAllStockIndicatorCommandHandler;
-
     /** @var Product[] */
     private $catalog = [];
 
@@ -65,17 +49,11 @@ class StockIndicatorExportContext implements Context
     public function __construct(
         ResourceConnection $resourceConnection,
         MagentoProductRepository $magentoProductRepository,
-        MagentoProductFactory $magentoProductFactory,
-        ExportStockIndicatorCommandHandler $exportStockIndicatorCommandHandler,
-        ExportStockIndicatorListCommandHandler $exportStockIndicatorListCommandHandler,
-        ExportAllStockIndicatorCommandHandler $exportAllStockIndicatorCommandHandler
+        MagentoProductFactory $magentoProductFactory
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->magentoProductRepository = $magentoProductRepository;
         $this->magentoProductFactory = $magentoProductFactory;
-        $this->exportStockIndicatorCommandHandler = $exportStockIndicatorCommandHandler;
-        $this->exportStockIndicatorListCommandHandler = $exportStockIndicatorListCommandHandler;
-        $this->exportAllStockIndicatorCommandHandler = $exportAllStockIndicatorCommandHandler;
     }
 
     /**
