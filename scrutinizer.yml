@@ -53,7 +53,10 @@ build:
           - bin/phpstan analyse
           - bin/psalm
           - bin/phpmd ./src text ./phpmd.xml
-          - bin/behat --no-interaction --no-snippets --stop-on-failure --format=pretty
+          - bin/behat --suite=domain --no-interaction --no-snippets --stop-on-failure --format=pretty
+          - bin/behat --suite=application --no-interaction --no-snippets --stop-on-failure --format=pretty
+          - bin/behat --suite=integration --no-interaction --no-snippets --stop-on-failure --format=pretty
+          - bin/behat --suite=endtoend --no-interaction --no-snippets --stop-on-failure --format=pretty
           - bin/phpspec run
 
 build_failure_conditions:

@@ -35,5 +35,6 @@ default:
         - Inviqa\Acceptance\Context\StockIndicatorExport\TransformationsContext
         - Inviqa\Acceptance\Context\StockIndicatorExport\EndToEnd\StockIndicatorExportContext
       services: '@bex.magento2_extension.service_container'
+
   extensions:
     Bex\Behat\Magento2Extension: ~
