@@ -14,11 +14,13 @@ use Inviqa\StockIndicatorExport\Application\CommandHandler\ExportStockIndicatorC
 use Inviqa\StockIndicatorExport\Application\CommandHandler\ExportStockIndicatorListCommandHandler;
 use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
 use Inviqa\StockIndicatorExport\Domain\Exception\StockIndicatorExportDocumentSaveFailedException;
+use Magento\Framework\Console\Cli;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class StockIndicatorExportCommand extends Command
 {
@@ -56,15 +58,19 @@ class StockIndicatorExportCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
+
         try {
             $this->runExport($input);
-            $output->writeln('Done.');
-            return 0;
+            $io->success('Export finished successfully');
         } catch (Exception $e) {
-            $output->writeln('Export failed with error: ' . $e->getMessage());
+            $io->error('Export failed with error: ' . $e->getMessage());
             $output->writeln($e->getTraceAsString(), OutputInterface::VERBOSITY_DEBUG);
-            return 1;
+
+            return Cli::RETURN_FAILURE;
         }
+
+        return Cli::RETURN_SUCCESS;
     }
 
     /**
@@ -83,7 +89,9 @@ class StockIndicatorExportCommand extends Command
         }
 
         if ((bool) $input->getOption('full')) {
-            $this->exportAllStockIndicatorCommandHandler->handle(new ExportAllStockIndicatorCommand($documentId));
+            $this->exportAllStockIndicatorCommandHandler->handle(
+                new ExportAllStockIndicatorCommand($documentId)
+            );
             return;
         }
 
@@ -98,7 +106,5 @@ class StockIndicatorExportCommand extends Command
         $this->exportStockIndicatorListCommandHandler->handle(
             new ExportStockIndicatorListCommand($documentId, $skuList)
         );
-
-        return;
     }
 }
