@@ -69,6 +69,7 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
+            setup
           key: "php-7.2-composer-locked"
           restore-keys: "php-7.2-composer-locked"
 
@@ -120,6 +121,7 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
+            setup
           key: "php-7.2-composer-locked"
           restore-keys: "php-7.2-composer-locked"
 
@@ -174,6 +176,7 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
+            setup
           key: "php-7.2-composer-locked"
           restore-keys: "php-7.2-composer-locked"
 
