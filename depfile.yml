@@ -17,6 +17,10 @@ layers:
     collectors:
       - type: className
         regex: .*Infrastructure\\.*
+      - type: className
+        regex: .*Magento\\.*
+      - type: className
+        regex: .*Symfony\\Component\\Console\\.*
 ruleset:
   Infrastructure:
     - Application

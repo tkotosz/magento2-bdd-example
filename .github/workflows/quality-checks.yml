@@ -348,4 +348,4 @@ jobs:
         run: "composer install --prefer-dist --no-interaction --no-progress --no-suggest"
 
       - name: "Run deptrac"
-        run: "bin/deptrac"
+        run: "bin/deptrac --formatter-github-actions=true"
