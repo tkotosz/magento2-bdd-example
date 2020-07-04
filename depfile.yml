@@ -1,0 +1,26 @@
+paths:
+  - ./src
+
+# https://pbs.twimg.com/media/Eba7CN1WAAAglLx?format=png&name=medium
+layers:
+  - name: Domain
+    collectors:
+      - type: className
+        regex: .*Domain\\.*
+
+  - name: Application
+    collectors:
+      - type: className
+        regex: .*Application\\.*
+
+  - name: Infrastructure
+    collectors:
+      - type: className
+        regex: .*Infrastructure\\.*
+ruleset:
+  Infrastructure:
+    - Application
+    - Domain
+  Application:
+    - Domain
+  Domain:
