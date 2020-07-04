@@ -1,9 +1,9 @@
-includes:
-	- vendor/inviqa/phpstan-magento2/extension.neon
 parameters:
 	level: max
 	paths:
 		- src
+	bootstrapFiles:
+		- tools/devtools-bootstrap.php
 	excludes_analyse:
 		- */src/**/registration.php
 	ignoreErrors:

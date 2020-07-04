@@ -14,8 +14,6 @@
         "bex/behat-magento2-extension": "^2.0",
         "ergebnis/composer-normalize": "^2.3",
         "ergebnis/phpstan-rules": "^0.14.4",
-        "inviqa/phpstan-magento2": "^0.1",
-        "nagno/phpspec-bootstrap-magento2": "^3.1",
         "pepakriz/phpstan-exception-rules": "^0.10.0",
         "phpmd/phpmd": "^2.7",
         "phpspec/phpspec": "^6.0",
