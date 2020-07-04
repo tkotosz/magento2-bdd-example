@@ -23,7 +23,7 @@ build:
       - sed -i 's/zend_extension_ts=xdebug.so/;zend_extension_ts=xdebug.so/' ~/.phpenv/versions/$(phpenv global)/etc/php.ini
       - composer global require "hirak/prestissimo:^0.3"
       - mkdir -p bin
-      - test -f bin/composer.phar || (cd bin && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && cd -)
+      - test -f bin/composer.phar || (cd bin && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php && cd -)
 
     override:
       - { command: 'rm -rf ./vendor && bin/composer.phar install --prefer-dist --no-interaction --no-progress --no-suggest -vv', idle_timeout: 600 }
