@@ -167,7 +167,7 @@ jobs:
           echo mysql-server mysql-server/root_password_again password root | sudo debconf-set-selections
           sudo apt-get install -y mysql-server-core-5.7 mysql-server-5.7
           ln -s /var/run/mysqld/mysqld.sock /tmp/mysql.sock
-          rm -rf generated/* var/*
+          rm -rf generated var pub
           mysql -uroot -proot -e "create database magento"
           bin/magento setup:install --admin-email "kotosy.magento@gmail.com" --admin-firstname "admin" --admin-lastname "admin" --admin-password "admin123" --admin-user "admin" --backend-frontname admin --base-url "http://magento.test" --db-host 127.0.0.1 --db-name magento --db-user root --db-password root --session-save files --use-rewrites 1 --use-secure 0 -vvv
           bin/magento setup:upgrade
