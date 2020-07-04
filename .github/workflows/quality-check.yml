@@ -85,7 +85,7 @@ jobs:
         run: "bin/phpcs -p"
 
   psalm:
-    name: "Static Analysis by Psalm"
+    name: "Psalm"
 
     runs-on: "ubuntu-latest"
 
@@ -140,7 +140,7 @@ jobs:
         run: "bin/psalm --output-format=github"
 
   phpstan:
-    name: "Static Analysis by PhpStan"
+    name: "PhpStan"
 
     runs-on: "ubuntu-latest"
 
