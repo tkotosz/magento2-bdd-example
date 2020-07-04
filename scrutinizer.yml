@@ -19,9 +19,11 @@ build:
     override:
       - { command: 'composer install --no-interaction --no-progress --no-suggest', idle_timeout: 600 }
 
-  tests:
-    override:
-      - true
+  nodes:
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
 
   cache:
     directories: [ ~/.composer/cache ]
