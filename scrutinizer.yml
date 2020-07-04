@@ -28,10 +28,9 @@ build:
     override:
       - { command: 'rm -rf ./vendor && bin/composer.phar install --prefer-dist --no-interaction --no-progress --no-suggest -vv', idle_timeout: 600 }
 
-    build:
-      tests:
-        override:
-          - true
+  tests:
+    override:
+      - true
   cache:
     directories: [ ~/.composer/cache ]
 
