@@ -122,8 +122,8 @@ jobs:
         ports:
           - 3306
         env:
-          MYSQL_USER: user
-          MYSQL_PASSWORD: password
+          MYSQL_USER: magento
+          MYSQL_PASSWORD: magento
           MYSQL_DATABASE: magento
           MYSQL_ROOT_PASSWORD: root
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
@@ -174,7 +174,7 @@ jobs:
 
       - name: "Install Magento"
         run: |
-          bin/magento setup:install --admin-email "kotosy.magento@gmail.com" --admin-firstname "admin" --admin-lastname "admin" --admin-password "admin123" --admin-user "admin" --backend-frontname admin --base-url "http://magento.test" --db-host mariadb --db-name magento --db-user root --db-password root --session-save files --use-rewrites 1 --use-secure 0 -vvv
+          bin/magento setup:install --admin-email "kotosy.magento@gmail.com" --admin-firstname "admin" --admin-lastname "admin" --admin-password "admin123" --admin-user "admin" --backend-frontname admin --base-url "http://magento.test" --db-host 127.0.0.1 --db-name magento --db-user magento --db-password magento --session-save files --use-rewrites 1 --use-secure 0 -vvv
           bin/magento setup:upgrade
 
       - name: "Run behat"
