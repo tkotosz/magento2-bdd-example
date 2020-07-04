@@ -35,5 +35,6 @@ jobs:
           install_path: "vendor/bundle"
           danger_file: "Dangerfile"
           danger_id: "danger-bot"
+          danger_version: "4.3.1"
         env:
           DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
