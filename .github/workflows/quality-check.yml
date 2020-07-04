@@ -1,4 +1,4 @@
-name: "Static Analysis by Psalm"
+name: "Quality Check"
 
 on:
   pull_request:
@@ -44,3 +44,41 @@ jobs:
 
       - name: "Run Psalm Analysis"
         run: "bin/psalm --stats"
+
+  static-analysis-phpstan:
+    name: "Static Analysis by PhpStan"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: '7.2'
+          extensions: intl, zip, zlib
+          coverage: none
+          ini-values: memory_limit=-1
+
+      - name: "Setup Composer Cache"
+        uses: "actions/cache@v2"
+        with:
+          path: "~/.composer/cache"
+          key: "php-7.2-composer-locked"
+          restore-keys: "php-7.2-composer-locked"
+
+      - name: "Setup Composer Auth"
+        run: "echo $COMPOSER_AUTH_JSON > auth.json"
+        env:
+          COMPOSER_AUTH_JSON: ${{ secrets.COMPOSER_AUTH_JSON }}
+
+      - name: "Install Project Dependencies"
+        run: "composer install --prefer-dist --no-interaction --no-progress --no-suggest"
+
+      - name: "Generate auto-generated classes"
+        run: "bin/magento setup:di:compile"
+
+      - name: "Run PhpStan Analysis"
+        run: "bin/phpstan analyse"
