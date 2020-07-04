@@ -7,6 +7,31 @@ on:
       - "master"
 
 jobs:
+  php-lint:
+    name: "PHP Lint"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Cancel Previous Runs"
+        uses: "styfle/cancel-workflow-action@0.4.0"
+        with:
+          access_token: ${{ github.token }}
+
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: '7.2'
+          extensions: intl, zip, zlib
+          coverage: none
+          ini-values: memory_limit=-1
+
+      - name: "Run PHP Lint"
+        run: "find src/ -type f \( -name '*.phtml' -o -name '*.php' \) | xargs -n 1 -P 8 -i php -l {} | grep -v 'No syntax errors detected' || echo 'OK'"
+
   static-analysis-psalm:
     name: "Static Analysis by Psalm"
 
