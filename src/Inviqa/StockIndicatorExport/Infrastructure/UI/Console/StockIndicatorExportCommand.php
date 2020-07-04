@@ -88,10 +88,10 @@ class StockIndicatorExportCommand extends Command
      * @throws ProductNotFoundException
      * @throws StockIndicatorExportDocumentSaveFailedException
      */
-    private function runExport(InputInterface $input)
+    private function runExport(InputInterface $input): void
     {
         $documentId = $input->getArgument('document_id');
-        $skuList = $input->getArgument('skus');
+        $skuList = (array) $input->getArgument('skus');
 
         if (!is_string($documentId)) {
             throw new InvalidArgumentException('Document ID must be string');
