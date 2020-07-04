@@ -30,7 +30,7 @@ jobs:
           ini-values: memory_limit=-1
 
       - name: "Run PHP Lint"
-        run: "find src/ -type f \( -name '*.phtml' -o -name '*.php' \) | xargs -n 1 -P 8 -i php -l {} | grep -v 'No syntax errors detected' || echo 'OK'"
+        run: find src/ -type f \( -name '*.phtml' -o -name '*.php' \) | xargs -n 1 -P 8 -i php -l {} | grep -v 'No syntax errors detected' || echo 'OK'
 
   static-analysis-psalm:
     name: "Static Analysis by Psalm"
