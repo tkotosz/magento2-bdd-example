@@ -1,0 +1,43 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+
+jobs:
+  # https://github.com/marketplace/actions/danger-action
+  danger:
+    name: "Danger"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Cancel Previous Runs"
+        uses: "styfle/cancel-workflow-action@0.4.0"
+        with:
+          access_token: ${{ github.token }}
+
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+        with:
+          fetch-depth: 100
+
+      - name: "Setup Ruby"
+        uses: "actions/setup-ruby@v1"
+        with:
+          ruby-version: "2.6"
+
+      - name: "Setup Gem Cache"
+        uses: "actions/cache@v1"
+        with:
+          path: "vendor/bundle"
+          key: ${{ runner.os }}-gems-${{ hashFiles('.github/danger-bot/Gemfile') }} # change your gemfile path
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
+      - name: "Run Danger"
+        uses: "MeilCli/danger-action@v4"
+        with:
+          plugins_file: ".github/danger-bot/Gemfile"
+          install_path: "vendor/bundle"
+          danger_file: "Dangerfile"
+          danger_id: "danger-bot"
+        env:
+          DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}

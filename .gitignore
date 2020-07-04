@@ -3,7 +3,6 @@
 
 /.my127ws
 /.docker-sync/
-/.github/
 /app/etc/*
 /app/design/adminhtml/
 /app/design/frontend/Magento/
@@ -48,6 +47,7 @@
 /php.ini.sample
 /README_EE.md
 /workspace.override.yml
+/.deptrac.cache
 
 # Keep
 

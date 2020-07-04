@@ -14,19 +14,19 @@
         "bex/behat-magento2-extension": "^2.0",
         "ergebnis/composer-normalize": "^2.3",
         "ergebnis/phpstan-rules": "^0.14.4",
-        "inviqa/phpstan-magento2": "^0.1",
-        "nagno/phpspec-bootstrap-magento2": "^3.1",
         "pepakriz/phpstan-exception-rules": "^0.10.0",
         "phpmd/phpmd": "^2.7",
         "phpspec/phpspec": "^6.0",
         "phpstan/extension-installer": "^1.0",
-        "phpstan/phpstan": "^0.12",
+        "phpstan/phpstan": "^0.12.32",
         "phpstan/phpstan-deprecation-rules": "^0.12",
         "phpstan/phpstan-strict-rules": "^0.12",
         "phpunit/phpunit": "^8.4",
+        "sebastian/phpcpd": "^4.1",
+        "sensiolabs-de/deptrac-shim": "^0.8.0",
         "slevomat/coding-standard": "^6.0",
         "squizlabs/php_codesniffer": "^3.5",
-        "vimeo/psalm": "^3.7"
+        "vimeo/psalm": "^3.12"
     },
     "config": {
         "bin-dir": "bin",
@@ -42,6 +42,12 @@
             "Magento\\": "app/code/Magento/",
             "Zend\\Mvc\\Controller\\": "setup/src/Zend/Mvc/Controller/",
             "Inviqa\\": "src/Inviqa"
+        },
+        "psr-0": {
+            "": [
+                "app/code/",
+                "generated/code/"
+            ]
         },
         "files": [
             "app/etc/NonComposerComponentRegistration.php",

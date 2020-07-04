@@ -1,0 +1,7 @@
+source "https://rubygems.org"
+
+gem 'danger'
+gem 'danger-welcome_message'
+gem 'danger-auto_label'
+gem 'danger-lgtm'
+gem 'danger-todoist'
