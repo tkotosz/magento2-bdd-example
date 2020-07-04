@@ -1,0 +1,50 @@
+name: "Static Analysis by Psalm"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  static-analysis-psalm:
+    name: "Static Analysis by Psalm"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: '7.2'
+          extensions: intl, zip, zlib
+          coverage: none
+          ini-values: memory_limit=-1
+
+      - name: "Get Composer Cache Directory"
+        id: "composer-cache"
+        run: "echo ::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: "Setup Composer Cache"
+        uses: "actions/cache@v2"
+        with:
+          path: |
+            ${{ steps.composer-cache.outputs.dir }}
+            vendor
+          key: "php-7.2-composer-locked"
+          restore-keys: "php-7.2-composer-locked"
+
+      - name: "Setup Composer Token"
+        run: |
+          if [ ! -z '${{ secrets.COMPOSER_TOKEN }}' ]; then
+            composer config github-oauth.github.com ${{ secrets.COMPOSER_TOKEN }}
+          fi
+
+      - name: "Install Project Dependencies"
+        run: "composer install --prefer-dist --no-interaction --no-progress --no-suggest"
+
+      - name: "Run Psalm Analysis"
+        run: "bin/psalm --shepherd --stats"

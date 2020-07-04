@@ -3,7 +3,6 @@
 
 /.my127ws
 /.docker-sync/
-/.github/
 /app/etc/*
 /app/design/adminhtml/
 /app/design/frontend/Magento/
