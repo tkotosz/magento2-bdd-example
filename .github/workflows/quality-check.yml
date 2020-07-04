@@ -57,7 +57,18 @@ jobs:
       - name: "Setup Composer Cache"
         uses: "actions/cache@v2"
         with:
-          path: "~/.composer/cache"
+          path: |
+            ~/.composer/cache
+            vendor
+            bin
+            app/etc/db_schema.xml
+            app/etc/di.xml
+            app/etc/NonComposerComponentRegistration.php
+            app/etc/registration_globlist.php
+            app/etc/vendor_path.php
+            app/autoload.php
+            app/bootstrap.php
+            app/functions.php
           key: "php-7.2-composer-locked"
           restore-keys: "php-7.2-composer-locked"
 
@@ -97,9 +108,18 @@ jobs:
       - name: "Setup Composer Cache"
         uses: "actions/cache@v2"
         with:
-          path: "~/.composer/cache"
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+          path: |
+            ~/.composer/cache
+            vendor
+            bin
+            app/etc/db_schema.xml
+            app/etc/di.xml
+            app/etc/NonComposerComponentRegistration.php
+            app/etc/registration_globlist.php
+            app/etc/vendor_path.php
+            app/autoload.php
+            app/bootstrap.php
+            app/functions.php
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -140,9 +160,18 @@ jobs:
       - name: "Setup Composer Cache"
         uses: "actions/cache@v2"
         with:
-          path: "~/.composer/cache"
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+          path: |
+            ~/.composer/cache
+            vendor
+            bin
+            app/etc/db_schema.xml
+            app/etc/di.xml
+            app/etc/NonComposerComponentRegistration.php
+            app/etc/registration_globlist.php
+            app/etc/vendor_path.php
+            app/autoload.php
+            app/bootstrap.php
+            app/functions.php
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
