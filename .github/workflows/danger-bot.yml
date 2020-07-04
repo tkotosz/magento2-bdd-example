@@ -31,7 +31,7 @@ jobs:
       - name: "Run Danger"
         uses: "MeilCli/danger-action@v4"
         with:
-          plugins_file: "Gemfile"
+          plugins_file: ".github/danger-bot/Gemfile"
           install_path: "vendor/bundle"
           danger_file: "Dangerfile"
           danger_id: "danger-bot"
