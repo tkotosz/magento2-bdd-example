@@ -1,11 +1,11 @@
-# https://github.com/marketplace/actions/danger-action
-name: Danger Bot
+name: Pull Request Checks
 
 on:
   pull_request:
 
 jobs:
-  danger:
+  # https://github.com/marketplace/actions/danger-action
+  danger-bot:
     runs-on: ubuntu-latest
     steps:
       - name: "Cancel Previous Runs"
