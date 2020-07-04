@@ -1,0 +1,9 @@
+source "https://rubygems.org"
+
+group :danger do
+  gem 'danger'
+  gem 'danger-auto_label'
+  gem 'danger-gitlab'
+  gem 'danger-lgtm'
+  gem 'danger-welcome_message'
+end
