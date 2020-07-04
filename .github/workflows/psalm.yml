@@ -38,7 +38,6 @@ jobs:
           restore-keys: "php-7.2-composer-locked"
 
       - name: "Setup Composer Auth"
-        if: ${{ secrets.COMPOSER_AUTH_JSON }}
         run: "echo ${{ secrets.COMPOSER_AUTH_JSON }} > auth.json"
 
       - name: "Install Project Dependencies"
