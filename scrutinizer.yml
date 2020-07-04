@@ -1,8 +1,8 @@
 filter:
   paths:
-    - 'src/*'
+    - 'src/'
   dependency_paths:
-    - 'vendor/*'
+    - 'vendor/'
 
 build:
   environment:
@@ -21,14 +21,28 @@ build:
 
   nodes:
     analysis:
+      project_setup:
+        override:
+          - bin/magento setup:di:compile
+
       tests:
         override:
           - php-scrutinizer-run
 
   cache:
     directories:
-     - '~/.composer/cache'
-     - 'vendor'
+      - '~/.composer/cache'
+      - 'vendor'
+      - 'bin'
+      - 'app/etc/db_schema.xml'
+      - 'app/etc/di.xml'
+      - 'app/etc/NonComposerComponentRegistration.php'
+      - 'app/etc/registration_globlist.php'
+      - 'app/etc/vendor_path.php'
+      - 'app/autoload.php'
+      - 'app/bootstrap.php'
+      - 'app/functions.php'
+      - 'setup'
 
 build_failure_conditions:
   - 'elements.rating(< A).new.exists'
