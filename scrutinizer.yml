@@ -21,16 +21,11 @@ build:
 
     override:
       - { command: 'composer install --no-interaction --no-progress --no-suggest', idle_timeout: 600 }
+      - { command: 'bin/magento setup:di:compile', idle_timeout: 600 }
 
   tests:
     override:
       - true
-
-  nodes:
-    analysis:
-      project_setup:
-        override:
-          - bin/magento setup:di:compile
 
   cache:
     directories:
