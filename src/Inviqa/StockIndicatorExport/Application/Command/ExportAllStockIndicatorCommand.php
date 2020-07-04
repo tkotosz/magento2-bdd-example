@@ -18,7 +18,6 @@ final class ExportAllStockIndicatorCommand
 
     public function documentId(): StockIndicatorExportDocumentId
     {
-        // TODO test danger
         return StockIndicatorExportDocumentId::fromString($this->documentId);
     }
 }

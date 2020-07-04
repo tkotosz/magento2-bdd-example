@@ -22,7 +22,6 @@ final class ExportStockIndicatorListCommand
      */
     public function __construct(string $documentId, array $productSkuList)
     {
-        // TODO another test
         $this->documentId = $documentId;
         $this->productSkuList = $productSkuList;
     }
