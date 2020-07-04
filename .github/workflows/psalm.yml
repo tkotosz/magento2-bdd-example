@@ -39,8 +39,8 @@ jobs:
 
       - name: "Setup Composer Token"
         run: |
-          if [ ! -z '${{ secrets.COMPOSER_TOKEN }}' ]; then
-            composer config github-oauth.github.com ${{ secrets.COMPOSER_TOKEN }}
+          if [ ! -z '${{ secrets.COMPOSER_AUTH_JSON }}' ]; then
+            echo ${{ secrets.COMPOSER_AUTH_JSON }} > auth.json
           fi
 
       - name: "Install Project Dependencies"
