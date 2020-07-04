@@ -14,7 +14,6 @@ use Inviqa\StockIndicatorExport\Application\CommandHandler\ExportStockIndicatorC
 use Inviqa\StockIndicatorExport\Application\CommandHandler\ExportStockIndicatorListCommandHandler;
 use Inviqa\StockIndicatorExport\Domain\Exception\ProductNotFoundException;
 use Inviqa\StockIndicatorExport\Domain\Exception\StockIndicatorExportDocumentSaveFailedException;
-use Magento\Catalog\Model\ProductFactory;
 use Magento\Framework\Console\Cli;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -34,21 +33,16 @@ class StockIndicatorExportCommand extends Command
     /** @var ExportAllStockIndicatorCommandHandler */
     private $exportAllStockIndicatorCommandHandler;
 
-    /** @var ProductFactory */
-    private $productFactory;
-
     public function __construct(
         ExportStockIndicatorCommandHandler $exportStockIndicatorCommandHandler,
         ExportStockIndicatorListCommandHandler $exportStockIndicatorListCommandHandler,
-        ExportAllStockIndicatorCommandHandler $exportAllStockIndicatorCommandHandler,
-        ProductFactory $productFactory
+        ExportAllStockIndicatorCommandHandler $exportAllStockIndicatorCommandHandler
     ) {
         parent::__construct();
 
         $this->exportStockIndicatorCommandHandler = $exportStockIndicatorCommandHandler;
         $this->exportStockIndicatorListCommandHandler = $exportStockIndicatorListCommandHandler;
         $this->exportAllStockIndicatorCommandHandler = $exportAllStockIndicatorCommandHandler;
-        $this->productFactory = $productFactory;
     }
 
     protected function configure(): void
@@ -64,10 +58,7 @@ class StockIndicatorExportCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $product = $this->productFactory->create();
-        $product->setSku('foobar');
         $io = new SymfonyStyle($input, $output);
-        $io->writeln($product->getSku());
 
         try {
             $this->runExport($input);
