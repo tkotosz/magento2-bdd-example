@@ -9,6 +9,7 @@
     <exclude-pattern>*/migrations/*</exclude-pattern>
     <exclude-pattern>*/Setup/*</exclude-pattern>
     <exclude-pattern>*/Standards/*/Tests/*\.(inc|css|js)</exclude-pattern>
+    <exclude-pattern>*/registration.php</exclude-pattern>
 
     <config name="installed_paths" value="vendor/slevomat/coding-standard" />
 
@@ -64,6 +65,17 @@
         <properties>
             <property name="searchAnnotations" value="true" />
         </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+        <properties>
+            <property name="newlinesCountBetweenOpenTagAndDeclare" value="2"/>
+            <property name="spacesCountAroundEqualsSign" value="0"/>
+        </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Commenting.UselessFunctionDocComment">
+        <exclude-pattern>*/Api/*/*\.php</exclude-pattern>
     </rule>
 
     <arg name="extensions" value="php" />
