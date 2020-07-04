@@ -43,7 +43,7 @@ jobs:
         run: "bin/magento setup:di:compile"
 
       - name: "Run Psalm Analysis"
-        run: "bin/psalm --stats"
+        run: "bin/psalm --stats --output-format=github"
 
   static-analysis-phpstan:
     name: "Static Analysis by PhpStan"
