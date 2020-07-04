@@ -59,5 +59,5 @@ jobs:
       - name: "Generate auto-generated classes"
         run: "bin/magento setup:di:compile"
 
-      - name: "Run psalm"
+      - name: "Run phpspec"
         run: "bin/phpspec run"

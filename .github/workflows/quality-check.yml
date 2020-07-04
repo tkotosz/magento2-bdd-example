@@ -243,5 +243,5 @@ jobs:
       - name: "Install Project Dependencies"
         run: "composer install --prefer-dist --no-interaction --no-progress --no-suggest"
 
-      - name: "Run phpstan"
+      - name: "Run phpmd"
         run: "bin/phpmd ./src text ./phpmd.xml"
