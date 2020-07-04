@@ -43,5 +43,11 @@ jobs:
       - name: "Install Project Dependencies"
         run: "composer install --prefer-dist --no-interaction --no-progress --no-suggest"
 
+      - name: "Remove env.php"
+        run: "rm app/etc/env.php"
+
+      - name: "Generate auto-generated classes"
+        run: "bin/magento setup:di:compile"
+
       - name: "Run Psalm Analysis"
         run: "bin/psalm"
