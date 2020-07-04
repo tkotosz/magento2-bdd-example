@@ -43,4 +43,4 @@ jobs:
         run: "bin/magento setup:di:compile"
 
       - name: "Run Psalm Analysis"
-        run: "bin/psalm"
+        run: "bin/psalm --stats"
