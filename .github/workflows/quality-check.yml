@@ -10,9 +10,14 @@ jobs:
   static-analysis-psalm:
     name: "Static Analysis by Psalm"
 
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
 
     steps:
+      - name: "Cancel Previous Runs"
+        uses: "styfle/cancel-workflow-action@0.4.0"
+        with:
+          access_token: ${{ github.token }}
+
       - name: "Checkout"
         uses: "actions/checkout@v2"
 
@@ -48,9 +53,14 @@ jobs:
   static-analysis-phpstan:
     name: "Static Analysis by PhpStan"
 
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
 
     steps:
+      - name: "Cancel Previous Runs"
+        uses: "styfle/cancel-workflow-action@0.4.0"
+        with:
+          access_token: ${{ github.token }}
+
       - name: "Checkout"
         uses: "actions/checkout@v2"
 
