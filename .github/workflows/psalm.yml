@@ -31,9 +31,7 @@ jobs:
       - name: "Setup Composer Cache"
         uses: "actions/cache@v2"
         with:
-          path: |
-            ${{ steps.composer-cache.outputs.dir }}
-            vendor
+          path: ${{ steps.composer-cache.outputs.dir }}
           key: "php-7.2-composer-locked"
           restore-keys: "php-7.2-composer-locked"
 
