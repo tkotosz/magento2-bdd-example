@@ -116,6 +116,18 @@ jobs:
 
     runs-on: "ubuntu-latest"
 
+    services:
+      mariadb:
+        image: mariadb:latest
+        ports:
+          - 3306
+        env:
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+          MYSQL_DATABASE: magento
+          MYSQL_ROOT_PASSWORD: root
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+
     steps:
       - name: "Cancel Previous Runs"
         uses: "styfle/cancel-workflow-action@0.4.0"
@@ -162,15 +174,6 @@ jobs:
 
       - name: "Install Magento"
         run: |
-          sudo apt-get update && sudo apt-get purge -y mysql-server*
-          echo mysql-server mysql-server/root_password password root | sudo debconf-set-selections
-          echo mysql-server mysql-server/root_password_again password root | sudo debconf-set-selections
-          sudo apt-get install -y mysql-server-core-5.7 mysql-server-5.7
-          ln -s /var/run/mysqld/mysqld.sock /tmp/mysql.sock
-          rm -rf generated var pub
-          pwd
-          chmod -R 777 pub
-          mysql -uroot -proot -e "create database magento"
           bin/magento setup:install --admin-email "kotosy.magento@gmail.com" --admin-firstname "admin" --admin-lastname "admin" --admin-password "admin123" --admin-user "admin" --backend-frontname admin --base-url "http://magento.test" --db-host 127.0.0.1 --db-name magento --db-user root --db-password root --session-save files --use-rewrites 1 --use-secure 0 -vvv
           bin/magento setup:upgrade
 
