@@ -3,6 +3,9 @@ has_exit_statement = `grep -r 'exit(' src/ `.length > 0
 has_var_dump_statement = `grep -r 'var_dump(' src/ `.length > 0
 has_console_log_statement = `grep -r 'console.log' src/ app/ `.length > 0
 
+welcome_message.greet
+todoist.print_todos_table
+
 #unless /^(([A-Z])+(-([0-9])+)?|MISC)(:|\s).+$/.match?(github.pr_title)
 #  warn("Your PR title format should contain the JIRA ticket reference (`TCP-9999 Fix something`) or be labelled as miscellaneous (`MISC Changed something`)")
 #end
