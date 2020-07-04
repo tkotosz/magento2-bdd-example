@@ -5,7 +5,8 @@ on:
 
 jobs:
   # https://github.com/marketplace/actions/danger-action
-  danger-bot:
+  danger:
+    name: "Danger"
     runs-on: ubuntu-latest
     steps:
       - name: "Cancel Previous Runs"
