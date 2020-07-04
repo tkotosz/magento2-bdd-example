@@ -81,4 +81,4 @@ jobs:
         run: "bin/magento setup:di:compile"
 
       - name: "Run PhpStan Analysis"
-        run: "bin/phpstan analyse"
+        run: "bin/phpstan analyse --error-format github"
