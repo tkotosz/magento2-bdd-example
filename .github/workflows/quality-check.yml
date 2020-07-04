@@ -216,5 +216,32 @@ jobs:
           coverage: none
           ini-values: memory_limit=-1
 
-      - name: "Run phpmd"
+      - name: "Setup Composer Cache"
+        uses: "actions/cache@v2"
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+            bin
+            app/etc/db_schema.xml
+            app/etc/di.xml
+            app/etc/NonComposerComponentRegistration.php
+            app/etc/registration_globlist.php
+            app/etc/vendor_path.php
+            app/autoload.php
+            app/bootstrap.php
+            app/functions.php
+            setup
+          key: "php-7.2-composer-locked"
+          restore-keys: "php-7.2-composer-locked"
+
+      - name: "Setup Composer Auth"
+        run: "echo $COMPOSER_AUTH_JSON > auth.json"
+        env:
+          COMPOSER_AUTH_JSON: ${{ secrets.COMPOSER_AUTH_JSON }}
+
+      - name: "Install Project Dependencies"
+        run: "composer install --prefer-dist --no-interaction --no-progress --no-suggest"
+
+      - name: "Run phpstan"
         run: "bin/phpmd ./src text ./phpmd.xml"
