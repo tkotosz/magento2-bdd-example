@@ -182,7 +182,7 @@ jobs:
       - name: "Install Magento"
         run: |
           mkdir -p pub/static pub/media
-          bin/magento setup:install --admin-email "kotosy.magento@gmail.com" --admin-firstname "admin" --admin-lastname "admin" --admin-password "admin123" --admin-user "admin" --backend-frontname admin --base-url "http://magento.test" --db-host 127.0.0.1 --db-name magento --db-user magento --db-password magento --session-save files --use-rewrites 1 --use-secure 0 --search-engine=elasticsearch7 --elasticsearch-host=elasticsearch --elasticsearch-port=9200 -vvv
+          bin/magento setup:install --admin-email "kotosy.magento@gmail.com" --admin-firstname "admin" --admin-lastname "admin" --admin-password "admin123" --admin-user "admin" --backend-frontname admin --base-url "http://magento.test" --db-host 127.0.0.1 --db-name magento --db-user magento --db-password magento --session-save files --use-rewrites 1 --use-secure 0 --search-engine=elasticsearch7 --elasticsearch-host=127.0.0.1 --elasticsearch-port=9200 -vvv
           bin/magento setup:upgrade
 
       - name: "Run behat"
@@ -259,7 +259,7 @@ jobs:
       - name: "Install Magento"
         run: |
           mkdir -p pub/static pub/media
-          bin/magento setup:install --admin-email "kotosy.magento@gmail.com" --admin-firstname "admin" --admin-lastname "admin" --admin-password "admin123" --admin-user "admin" --backend-frontname admin --base-url "http://magento.test" --db-host 127.0.0.1 --db-name magento --db-user magento --db-password magento --session-save files --use-rewrites 1 --use-secure 0 --search-engine=elasticsearch7 --elasticsearch-host=elasticsearch --elasticsearch-port=9200 -vvv
+          bin/magento setup:install --admin-email "kotosy.magento@gmail.com" --admin-firstname "admin" --admin-lastname "admin" --admin-password "admin123" --admin-user "admin" --backend-frontname admin --base-url "http://magento.test" --db-host 127.0.0.1 --db-name magento --db-user magento --db-password magento --session-save files --use-rewrites 1 --use-secure 0 --search-engine=elasticsearch7 --elasticsearch-host=127.0.0.1 --elasticsearch-port=9200 -vvv
           bin/magento setup:upgrade
 
       - name: "Run behat"
