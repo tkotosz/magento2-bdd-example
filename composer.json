@@ -16,6 +16,7 @@
         "phpspec/phpspec": "^7.0",
         "phpstan/phpstan": "^0.12.78",
         "phpunit/phpunit": "^9.5",
+        "povils/phpmnd": "dev-master",
         "sebastian/phpcpd": "^6.0",
         "sensiolabs-de/deptrac-shim": "^0.11.1",
         "slevomat/coding-standard": "^6.4",
