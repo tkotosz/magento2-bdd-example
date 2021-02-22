@@ -4,29 +4,23 @@
     "description": "Magento 2 BDD Example",
     "license": "proprietary",
     "require": {
-        "php": ">=7.2",
-        "composer/composer": "@alpha",
-        "magento/product-community-edition": "2.3.4",
+        "php": "^7.4",
+        "magento/product-community-edition": "2.4.2",
         "tkotosz/test-area-magento2": "^1.0"
     },
     "require-dev": {
-        "behat/behat": "^3.5",
-        "bex/behat-magento2-extension": "^2.0",
-        "ergebnis/composer-normalize": "^2.3",
-        "ergebnis/phpstan-rules": "^0.14.4",
-        "pepakriz/phpstan-exception-rules": "^0.10.0",
-        "phpmd/phpmd": "^2.7",
-        "phpspec/phpspec": "^6.0",
-        "phpstan/extension-installer": "^1.0",
-        "phpstan/phpstan": "^0.12.32",
-        "phpstan/phpstan-deprecation-rules": "^0.12",
-        "phpstan/phpstan-strict-rules": "^0.12",
-        "phpunit/phpunit": "^8.4",
-        "sebastian/phpcpd": "^4.1",
-        "sensiolabs-de/deptrac-shim": "^0.8.0",
-        "slevomat/coding-standard": "^6.0",
+        "behat/behat": "^3.8",
+        "bex/behat-magento2-extension": "^2.1",
+        "ergebnis/composer-normalize": "^2.13",
+        "phpmd/phpmd": "^2.9",
+        "phpspec/phpspec": "^7.0",
+        "phpstan/phpstan": "^0.12.78",
+        "phpunit/phpunit": "^9.5",
+        "sebastian/phpcpd": "^6.0",
+        "sensiolabs-de/deptrac-shim": "^0.11.1",
+        "slevomat/coding-standard": "^6.4",
         "squizlabs/php_codesniffer": "^3.5",
-        "vimeo/psalm": "^3.12"
+        "vimeo/psalm": "^4.6"
     },
     "config": {
         "bin-dir": "bin",
@@ -36,18 +30,18 @@
         "magento-force": "override"
     },
     "autoload": {
+        "psr-0": {
+            "": [
+                "app/code/",
+                "generated/code/"
+            ]
+        },
         "psr-4": {
             "Magento\\Framework\\": "lib/internal/Magento/Framework/",
             "Magento\\Setup\\": "setup/src/Magento/Setup/",
             "Magento\\": "app/code/Magento/",
             "Zend\\Mvc\\Controller\\": "setup/src/Zend/Mvc/Controller/",
             "Inviqa\\": "src/Inviqa"
-        },
-        "psr-0": {
-            "": [
-                "app/code/",
-                "generated/code/"
-            ]
         },
         "files": [
             "app/etc/NonComposerComponentRegistration.php",
@@ -77,10 +71,16 @@
     ],
     "minimum-stability": "stable",
     "scripts": {
+        "fix-code": [
+            "phpcbf -p"
+        ],
         "test": [
             "@test-quality",
             "@test-unit",
             "@test-acceptance"
+        ],
+        "test-acceptance": [
+            "behat"
         ],
         "test-quality": [
             "find src/ pub/ -type f \\( -name '*.phtml' -o -name '*.php' \\) | xargs -n 1 -P 8 -i php -l {} | grep -v 'No syntax errors detected' || echo 'OK'",
@@ -91,12 +91,6 @@
         ],
         "test-unit": [
             "phpspec run"
-        ],
-        "test-acceptance": [
-            "behat"
-        ],
-        "fix-code": [
-            "phpcbf -p"
         ]
     }
 }

@@ -134,7 +134,7 @@ jobs:
         run: "composer install --prefer-dist --no-interaction --no-progress --no-suggest"
 
       - name: "Run phpcpd"
-        run: "bin/phpcpd --progress src"
+        run: "bin/phpcpd src"
 
   psalm:
     name: "Psalm"
