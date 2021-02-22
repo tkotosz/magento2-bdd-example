@@ -132,6 +132,8 @@ jobs:
         env:
           ES_JAVA_OPTS: -Xms512m -Xmx512m
           discovery.type: single-node
+        ports:
+          - 9200:9200
 
     steps:
       - name: "Cancel Previous Runs"
@@ -207,6 +209,8 @@ jobs:
         env:
           ES_JAVA_OPTS: -Xms512m -Xmx512m
           discovery.type: single-node
+        ports:
+          - 9200:9200
 
     steps:
       - name: "Cancel Previous Runs"
