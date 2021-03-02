@@ -22,8 +22,7 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup/src
-        setup/config-php@v2"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
@@ -75,8 +74,7 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup/src
-        setup/config-php@v2"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
@@ -128,8 +126,7 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup/src
-        setup/config-php@v2"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
@@ -181,8 +178,7 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup/src
-        setup/config-php@v2"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
@@ -238,8 +234,7 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup/src
-        setup/config-php@v2"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
@@ -295,8 +290,7 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup/src
-        setup/config-php@v2"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
@@ -348,8 +342,7 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup/src
-        setup/config-php@v2"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
@@ -401,8 +394,7 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup/src
-        setup/config-php@v2"
+        uses: "shivammathur/setup-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
