@@ -24,7 +24,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: '7.2'
+          php-version: '7.4'
           extensions: intl, zip, zlib
           coverage: none
           ini-values: memory_limit=-1
@@ -44,9 +44,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"

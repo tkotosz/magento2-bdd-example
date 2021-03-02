@@ -1,6 +1,7 @@
 
 # Directories
 
+/.idea
 /.my127ws
 /.docker-sync/
 /app/etc/*
@@ -47,6 +48,7 @@
 /php.ini.sample
 /README_EE.md
 /workspace.override.yml
+/env.sh
 /.deptrac.cache
 
 # Keep
