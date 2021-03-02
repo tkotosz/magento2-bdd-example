@@ -44,9 +44,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"

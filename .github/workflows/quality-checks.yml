@@ -22,7 +22,8 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
+        uses: "shivammathur/setup/src
+        setup/config-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
@@ -44,9 +45,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -74,7 +75,8 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
+        uses: "shivammathur/setup/src
+        setup/config-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
@@ -96,9 +98,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -126,7 +128,8 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
+        uses: "shivammathur/setup/src
+        setup/config-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
@@ -148,9 +151,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -178,7 +181,8 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
+        uses: "shivammathur/setup/src
+        setup/config-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
@@ -200,9 +204,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -213,7 +217,8 @@ jobs:
         run: "composer install --prefer-dist --no-interaction --no-progress --no-suggest"
 
       - name: "Generate auto-generated classes"
-        run: "bin/magento setup:di:compile"
+        run: "bin/magento setup/src
+        setup/config:di:compile"
 
       - name: "Run psalm"
         run: "bin/psalm --output-format=github"
@@ -233,7 +238,8 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
+        uses: "shivammathur/setup/src
+        setup/config-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
@@ -255,9 +261,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -268,7 +274,8 @@ jobs:
         run: "composer install --prefer-dist --no-interaction --no-progress --no-suggest"
 
       - name: "Generate auto-generated classes"
-        run: "bin/magento setup:di:compile"
+        run: "bin/magento setup/src
+        setup/config:di:compile"
 
       - name: "Run phpstan"
         run: "bin/phpstan analyse --error-format github"
@@ -288,7 +295,8 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
+        uses: "shivammathur/setup/src
+        setup/config-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
@@ -310,9 +318,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -340,7 +348,8 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
+        uses: "shivammathur/setup/src
+        setup/config-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
@@ -362,9 +371,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -392,7 +401,8 @@ jobs:
         uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
+        uses: "shivammathur/setup/src
+        setup/config-php@v2"
         with:
           php-version: '7.4'
           extensions: intl, zip, zlib
@@ -414,9 +424,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
