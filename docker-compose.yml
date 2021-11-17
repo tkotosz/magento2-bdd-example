@@ -3,11 +3,7 @@ version: '3.7'
 services:
 
   console:
-    build:
-      context: docker/console
-      args:
-        APP_USER_ID: 1000
-        APP_GROUP_ID: 1000
+    image: tkotosz/magento2-bdd-example-console:latest
     environment:
       SMTP_HOST: mailhog
       SMTP_PORT: 1025
