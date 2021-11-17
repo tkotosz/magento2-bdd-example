@@ -24,7 +24,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: '7.2'
+          php-version: '7.4'
           extensions: intl, zip, zlib
           coverage: none
           ini-values: memory_limit=-1
@@ -44,9 +44,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -76,7 +76,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: '7.2'
+          php-version: '7.4'
           extensions: intl, zip, zlib
           coverage: none
           ini-values: memory_limit=-1
@@ -96,9 +96,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -126,7 +126,14 @@ jobs:
           MYSQL_ROOT_PASSWORD: root
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping"
+      elasticsearch:
+        image: elasticsearch:7.7.1
+        env:
+          ES_JAVA_OPTS: -Xms512m -Xmx512m
+          discovery.type: single-node
+        ports:
+          - 9200:9200
 
     steps:
       - name: "Cancel Previous Runs"
@@ -140,7 +147,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: '7.2'
+          php-version: '7.4'
           extensions: intl, zip, zlib
           coverage: none
           ini-values: memory_limit=-1
@@ -160,9 +167,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -175,7 +182,7 @@ jobs:
       - name: "Install Magento"
         run: |
           mkdir -p pub/static pub/media
-          bin/magento setup:install --admin-email "kotosy.magento@gmail.com" --admin-firstname "admin" --admin-lastname "admin" --admin-password "admin123" --admin-user "admin" --backend-frontname admin --base-url "http://magento.test" --db-host 127.0.0.1 --db-name magento --db-user magento --db-password magento --session-save files --use-rewrites 1 --use-secure 0 -vvv
+          bin/magento setup:install --admin-email "kotosy.magento@gmail.com" --admin-firstname "admin" --admin-lastname "admin" --admin-password "admin123" --admin-user "admin" --backend-frontname admin --base-url "http://magento.test" --db-host 127.0.0.1 --db-name magento --db-user magento --db-password magento --session-save files --use-rewrites 1 --use-secure 0 --search-engine=elasticsearch7 --elasticsearch-host=127.0.0.1 --elasticsearch-port=9200 -vvv
           bin/magento setup:upgrade
 
       - name: "Run behat"
@@ -196,7 +203,14 @@ jobs:
           MYSQL_ROOT_PASSWORD: root
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping"
+      elasticsearch:
+        image: elasticsearch:7.7.1
+        env:
+          ES_JAVA_OPTS: -Xms512m -Xmx512m
+          discovery.type: single-node
+        ports:
+          - 9200:9200
 
     steps:
       - name: "Cancel Previous Runs"
@@ -210,7 +224,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: '7.2'
+          php-version: '7.4'
           extensions: intl, zip, zlib
           coverage: none
           ini-values: memory_limit=-1
@@ -230,9 +244,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -245,7 +259,7 @@ jobs:
       - name: "Install Magento"
         run: |
           mkdir -p pub/static pub/media
-          bin/magento setup:install --admin-email "kotosy.magento@gmail.com" --admin-firstname "admin" --admin-lastname "admin" --admin-password "admin123" --admin-user "admin" --backend-frontname admin --base-url "http://magento.test" --db-host 127.0.0.1 --db-name magento --db-user magento --db-password magento --session-save files --use-rewrites 1 --use-secure 0 -vvv
+          bin/magento setup:install --admin-email "kotosy.magento@gmail.com" --admin-firstname "admin" --admin-lastname "admin" --admin-password "admin123" --admin-user "admin" --backend-frontname admin --base-url "http://magento.test" --db-host 127.0.0.1 --db-name magento --db-user magento --db-password magento --session-save files --use-rewrites 1 --use-secure 0 --search-engine=elasticsearch7 --elasticsearch-host=127.0.0.1 --elasticsearch-port=9200 -vvv
           bin/magento setup:upgrade
 
       - name: "Run behat"

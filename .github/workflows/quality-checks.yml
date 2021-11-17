@@ -8,7 +8,7 @@ on:
 
 jobs:
   phplint:
-    name: "PHP Lint"
+    name: "PHP Parallel Lint"
 
     runs-on: "ubuntu-latest"
 
@@ -24,32 +24,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: '7.2'
-          extensions: intl, zip, zlib
-          coverage: none
-          ini-values: memory_limit=-1
-
-      - name: "Run php -l"
-        run: find src/ -type f \( -name '*.phtml' -o -name '*.php' \) | xargs -n 1 -P 8 -i php -l {} | grep -v 'No syntax errors detected' || echo 'OK'
-
-  phpcs:
-    name: "PHP Code Sniffer"
-
-    runs-on: "ubuntu-latest"
-
-    steps:
-      - name: "Cancel Previous Runs"
-        uses: "styfle/cancel-workflow-action@0.4.0"
-        with:
-          access_token: ${{ github.token }}
-
-      - name: "Checkout"
-        uses: "actions/checkout@v2"
-
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
-        with:
-          php-version: '7.2'
+          php-version: '7.4'
           extensions: intl, zip, zlib
           coverage: none
           ini-values: memory_limit=-1
@@ -69,9 +44,61 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
+
+      - name: "Setup Composer Auth"
+        run: "echo $COMPOSER_AUTH_JSON > auth.json"
+        env:
+          COMPOSER_AUTH_JSON: ${{ secrets.COMPOSER_AUTH_JSON }}
+
+      - name: "Install Project Dependencies"
+        run: "composer install --prefer-dist --no-interaction --no-progress --no-suggest"
+
+      - name: "Run parallel-lint"
+        run: bin/parallel-lint src
+
+  phpcs:
+    name: "PHP Code Sniffer"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Cancel Previous Runs"
+        uses: "styfle/cancel-workflow-action@0.4.0"
+        with:
+          access_token: ${{ github.token }}
+
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: '7.4'
+          extensions: intl, zip, zlib
+          coverage: none
+          ini-values: memory_limit=-1
+
+      - name: "Setup Composer Cache"
+        uses: "actions/cache@v2"
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+            bin
+            app/etc/db_schema.xml
+            app/etc/di.xml
+            app/etc/NonComposerComponentRegistration.php
+            app/etc/registration_globlist.php
+            app/etc/vendor_path.php
+            app/autoload.php
+            app/bootstrap.php
+            app/functions.php
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -101,7 +128,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: '7.2'
+          php-version: '7.4'
           extensions: intl, zip, zlib
           coverage: none
           ini-values: memory_limit=-1
@@ -121,9 +148,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -134,7 +161,7 @@ jobs:
         run: "composer install --prefer-dist --no-interaction --no-progress --no-suggest"
 
       - name: "Run phpcpd"
-        run: "bin/phpcpd --progress src"
+        run: "bin/phpcpd src"
 
   psalm:
     name: "Psalm"
@@ -153,7 +180,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: '7.2'
+          php-version: '7.4'
           extensions: intl, zip, zlib
           coverage: none
           ini-values: memory_limit=-1
@@ -173,9 +200,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -208,7 +235,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: '7.2'
+          php-version: '7.4'
           extensions: intl, zip, zlib
           coverage: none
           ini-values: memory_limit=-1
@@ -228,9 +255,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -263,7 +290,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: '7.2'
+          php-version: '7.4'
           extensions: intl, zip, zlib
           coverage: none
           ini-values: memory_limit=-1
@@ -283,9 +310,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -315,7 +342,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: '7.2'
+          php-version: '7.4'
           extensions: intl, zip, zlib
           coverage: none
           ini-values: memory_limit=-1
@@ -335,9 +362,9 @@ jobs:
             app/autoload.php
             app/bootstrap.php
             app/functions.php
-            setup
-          key: "php-7.2-composer-locked"
-          restore-keys: "php-7.2-composer-locked"
+            setup/src
+            setup/config
+          key: "composer-cache"
 
       - name: "Setup Composer Auth"
         run: "echo $COMPOSER_AUTH_JSON > auth.json"
@@ -349,3 +376,55 @@ jobs:
 
       - name: "Run deptrac"
         run: "bin/deptrac --formatter-github-actions=true"
+
+  phpmnd:
+    name: "PHP Magic Number Detector"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Cancel Previous Runs"
+        uses: "styfle/cancel-workflow-action@0.4.0"
+        with:
+          access_token: ${{ github.token }}
+
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: '7.4'
+          extensions: intl, zip, zlib
+          coverage: none
+          ini-values: memory_limit=-1
+
+      - name: "Setup Composer Cache"
+        uses: "actions/cache@v2"
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+            bin
+            app/etc/db_schema.xml
+            app/etc/di.xml
+            app/etc/NonComposerComponentRegistration.php
+            app/etc/registration_globlist.php
+            app/etc/vendor_path.php
+            app/autoload.php
+            app/bootstrap.php
+            app/functions.php
+            setup/src
+            setup/config
+          key: "composer-cache"
+
+      - name: "Setup Composer Auth"
+        run: "echo $COMPOSER_AUTH_JSON > auth.json"
+        env:
+          COMPOSER_AUTH_JSON: ${{ secrets.COMPOSER_AUTH_JSON }}
+
+      - name: "Install Project Dependencies"
+        run: "composer install --prefer-dist --no-interaction --no-progress --no-suggest"
+
+      - name: "Run phpmnd"
+        run: "bin/phpmnd src"

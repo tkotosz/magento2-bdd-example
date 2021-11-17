@@ -28,12 +28,10 @@ jobs:
         uses: "actions/cache@v1"
         with:
           path: "vendor/bundle"
-          key: ${{ runner.os }}-gems-${{ hashFiles('.github/danger-bot/Gemfile') }} # change your gemfile path
-          restore-keys: |
-            ${{ runner.os }}-gems-
+          key: ${{ runner.os }}-gems-${{ hashFiles('.github/danger-bot/Gemfile') }}
 
       - name: "Run Danger"
-        uses: "MeilCli/danger-action@v4"
+        uses: "MeilCli/danger-action@v5"
         with:
           plugins_file: ".github/danger-bot/Gemfile"
           install_path: "vendor/bundle"
