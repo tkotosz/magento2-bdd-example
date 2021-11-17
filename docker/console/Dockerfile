@@ -88,4 +88,3 @@ RUN curl -O https://files.magerun.net/n98-magerun2.phar \
 COPY root /
 
 WORKDIR /app
-USER appuser
