@@ -1,9 +1,0 @@
-workspace('magento2-bdd-example'):
-  description: generated local workspace for magento2-bdd-example.
-  harness: inviqa/magento2
-
-attribute('app.services'):
-    - varnish
-
-attribute('magento.username'): '= decrypt("YTozOntpOjA7czo3OiJkZWZhdWx0IjtpOjE7czoyNDoiSvHG2D2UQNuxVHVRyK7V58PUaXrekTBtIjtpOjI7czo0ODoi8hC9CaJc0jN7JjfOQkHay9OPnJrVV1R0WzwASJqdLzD6yKN/rXJn7qqigPdVkjlrIjt9")'
-attribute('magento.password'): '= decrypt("YTozOntpOjA7czo3OiJkZWZhdWx0IjtpOjE7czoyNDoiPz++7LZnojveo2SgRkqa8RQt1GGGXSzsIjtpOjI7czo0ODoi+f9s0aeOS1MvMrV4DMtRSv4sf518Q6scR9TmWdHsXbHPj61s7bfbnqXePw+tmBLvIjt9")'

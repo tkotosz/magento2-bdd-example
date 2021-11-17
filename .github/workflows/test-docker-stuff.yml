@@ -1,0 +1,58 @@
+name: "Testing docker stuff"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  foobar:
+    name: "Foobar"
+
+    runs-on: "ubuntu-latest"
+    strategy:
+      fail-fast: true
+
+    container:
+      image: tkotosz/magento2-bdd-example-console:latest
+
+    services:
+      database:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: magento
+          MYSQL_PASSWORD: magento
+          MYSQL_DATABASE: magentodb
+        ports:
+          - 3306:3306
+
+      elasticsearch:
+        image: elasticsearch:7.12.1
+        env:
+          ES_JAVA_OPTS: -Xms512m -Xmx512m
+          discovery.type: single-node
+        ports:
+          - 9200:9200
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Setup Composer Auth"
+        run: "echo $COMPOSER_AUTH_JSON > auth.json"
+        env:
+          COMPOSER_AUTH_JSON: ${{ secrets.COMPOSER_AUTH_JSON }}
+
+      - name: Install magento
+        run: |
+          ls -lah
+          composer install --prefer-dist --no-interaction
+          bin/magento setup:install --admin-email "kotosy.magento@gmail.com" --admin-firstname "admin" --admin-lastname "admin" --admin-password "admin123" --admin-user "admin" --backend-frontname admin --base-url "http://magento.test" --db-host database --db-name magentodb --db-user magento --db-password magento --session-save files --use-rewrites 1 --use-secure 0 --search-engine=elasticsearch7 --elasticsearch-host=elasticsearch --elasticsearch-port=9200 -vvv
+          bin/magento setup:upgrade
+          bin/magento config:set --scope=default --scope-code=0 system/full_page_cache/caching_application 2
+          bin/magento cache:clean
+
+      - name: "Run behat"
+        run: "bin/behat --suite=endtoend --no-interaction --no-snippets --stop-on-failure --format=pretty"

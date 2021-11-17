@@ -8,17 +8,11 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{markdown,md}]
+[*.md]
 trim_trailing_whitespace = false
 
-[*.{feature,yaml,yml,yml.twig}]
+[*.{yml,yaml,json}]
 indent_size = 2
 
-[Makefile]
-indent_style = tab
-
-[app/etc/env.php]
-indent_size = 2
-
-[*.neon]
-indent_style=tab
+[{composer, auth}.json]
+indent_size = 4
