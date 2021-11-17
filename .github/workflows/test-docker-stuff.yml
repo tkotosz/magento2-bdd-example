@@ -20,10 +20,6 @@ jobs:
     services:
       database:
         image: mysql:8.0
-        options: >-
-          --default-authentication-plugin=mysql_native_password
-          --log_bin_trust_function_creators=1
-          --max_allowed_packet=4M
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_USER: magento
@@ -42,23 +38,11 @@ jobs:
 
       redis-cache:
         image: redis:6
-        options: >-
-          --maxmemory 1073742000
-          --maxmemory-policy allkeys-lru
-          --save 3600 1
-          --save 300 100
-          --save 60 10000
         ports:
           - 6379:6379
 
       redis-session:
         image: redis:6
-        options: >-
-          --maxmemory 1073742000
-          --maxmemory-policy volatile-ttl
-          --save 3600 1
-          --save 300 100
-          --save 60 10000
 
     steps:
       - name: "Checkout"
