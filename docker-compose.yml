@@ -1,0 +1,94 @@
+version: '3.7'
+
+services:
+
+  console:
+    build:
+      context: docker/console
+      args:
+        APP_USER_ID: 1000
+        APP_GROUP_ID: 1000
+    environment:
+      SMTP_HOST: mailhog
+      SMTP_PORT: 1025
+    depends_on:
+      - database
+      - elasticsearch
+      - redis-cache
+      - redis-session
+      - rabbitmq
+      - mailhog
+    volumes:
+      - ./:/app:delegated
+    networks:
+      - backend
+  
+  database:
+    image: mysql:8.0
+    command:
+      - '--default-authentication-plugin=mysql_native_password'
+      - '--log_bin_trust_function_creators=1'
+      - '--max_allowed_packet=4M'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: magento
+      MYSQL_PASSWORD: magento
+      MYSQL_DATABASE: magentodb
+    volumes:
+      - database-data:/var/lib/mysql
+    networks:
+      - backend
+
+  elasticsearch:
+    image: elasticsearch:7.12.1
+    environment:
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - discovery.type=single-node
+    networks:
+      - backend
+
+  redis-cache:
+    image: redis:6
+    # 1GB; evict any least recently used key even if they don't have a TTL
+    command:
+      - '--maxmemory 1073742000'
+      - '--maxmemory-policy allkeys-lru'
+      - '--save 3600 1'
+      - '--save 300 100'
+      - '--save 60 10000'
+    networks:
+      - backend
+
+  redis-session:
+    image: redis:6
+    # 1GB; evict key that would expire soonest
+    command:
+      - '--maxmemory 1073742000'
+      - '--maxmemory-policy volatile-ttl'
+      - '--save 3600 1'
+      - '--save 300 100'
+      - '--save 60 10000'
+    networks:
+      - backend
+
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbit_magento
+      RABBITMQ_DEFAULT_VHOST: rabbit_magento
+      RABBITMQ_DEFAULT_PASS: rabbit_magento
+      RABBITMQ_ERLANG_COOKIE: rabbit_magento
+    networks:
+      - backend
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  database-data: {}

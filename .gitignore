@@ -26,7 +26,6 @@
 /.php_cs*
 /.travis.yml
 /.user.ini
-/docker-compose.yml
 /docker-sync.yml
 /app/.htaccess
 /app/*.php
