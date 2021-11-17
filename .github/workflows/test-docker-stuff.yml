@@ -49,7 +49,7 @@ jobs:
         run: |
           ls -lah
           composer install --prefer-dist --no-interaction
-          bin/magento setup:install --admin-email "kotosy.magento@gmail.com" --admin-firstname "admin" --admin-lastname "admin" --admin-password "admin123" --admin-user "admin" --backend-frontname admin --base-url "http://magento.test" --db-host 127.0.0.1 --db-name magento --db-user magento --db-password magento --session-save files --use-rewrites 1 --use-secure 0 --search-engine=elasticsearch7 --elasticsearch-host=127.0.0.1 --elasticsearch-port=9200 -vvv
+          bin/magento setup:install --admin-email "kotosy.magento@gmail.com" --admin-firstname "admin" --admin-lastname "admin" --admin-password "admin123" --admin-user "admin" --backend-frontname admin --base-url "http://magento.test" --db-host mysql --db-name magento --db-user magento --db-password magento --session-save files --use-rewrites 1 --use-secure 0 --search-engine=elasticsearch7 --elasticsearch-host=elasticsearch --elasticsearch-port=9200 -vvv
           bin/magento setup:upgrade
           bin/magento config:set --scope=default --scope-code=0 system/full_page_cache/caching_application 2
           bin/magento cache:clean
